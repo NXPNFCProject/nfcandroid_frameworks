@@ -152,8 +152,8 @@ public final class NxpNfcAdapter {
      /**
      * @hide
      */
-    public INxpNfcAdapterExtras getNxpNfcAdapterExtrasInterface(INfcAdapterExtras extras) {
-        if (sNxpService == null || extras == null) {
+    public INxpNfcAdapterExtras getNxpNfcAdapterExtrasInterface() {
+        if (sNxpService == null) {
             throw new UnsupportedOperationException("You need a context on NxpNfcAdapter to use the "
                     + " NXP NFC extras APIs");
         }
