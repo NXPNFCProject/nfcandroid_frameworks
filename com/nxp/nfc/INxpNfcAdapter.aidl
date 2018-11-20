@@ -17,13 +17,14 @@ package com.nxp.nfc;
 
 import com.nxp.nfc.gsma.internal.INxpNfcController;
 import com.nxp.nfc.INxpNfcAdapterExtras;
-
+import com.nxp.nfc.NfcAidServiceInfo;
 /**
  * @hide
  */
 interface INxpNfcAdapter
 {
     INxpNfcController getNxpNfcControllerInterface();
+    List<NfcAidServiceInfo> getServicesAidInfo(int userId, String category);
     int[] getActiveSecureElementList(String pkg);
     INxpNfcAdapterExtras getNxpNfcAdapterExtrasInterface();
     int mPOSSetReaderMode(String pkg, boolean on);
@@ -36,5 +37,8 @@ interface INxpNfcAdapter
     byte[] transceiveAppData(in byte[] data);
     int setConfig(String configs , String pkg);
     int selectUicc(int uiccSlot);
+    int getMaxAidRoutingTableSize();
+    int getCommittedAidRoutingTableSize();
     int getSelectedUicc();
+    int updateServiceState(int userId , in Map serviceState);
 }

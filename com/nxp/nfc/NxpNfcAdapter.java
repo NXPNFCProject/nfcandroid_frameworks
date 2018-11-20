@@ -33,7 +33,7 @@ import android.os.RemoteException;
 import com.nxp.nfc.gsma.internal.INxpNfcController;
 
 import android.util.Log;
-
+import java.util.List;
 public final class NxpNfcAdapter {
     private static final String TAG = "NXPNFC";
     private static int ALL_SE_ID_TYPE = 0x07;
@@ -115,7 +115,34 @@ public final class NxpNfcAdapter {
         sNxpService = getNxpNfcAdapterInterface();
         return;
     }
-
+    /**
+     * This api returns the CATEGORY_OTHER (non Payment)Services registered by the user
+     * along with the size of the registered aid group.
+     * This api has to be called when aid routing full intent is broadcast by the system.
+     * <p>This gives the list of both static and dynamic card emulation services
+     * registered by the user.
+     * <p> This api can be called to get the list of offhost and onhost cardemulation
+     * services registered by the user.
+     * <ul>
+     * <li>
+     * If the category is CATEGORY_PAYMENT than null value is returned.
+     * <li>
+     * If there are no non payment services null value is returned.
+     * </ul>
+     * @param UserID  The user id of current user
+     * @param category The category i.e. CATEGORY_PAYMENT , CATEGORY_OTHER
+     * @return The List of NfcAidServiceInfo objects
+     */
+    public List<NfcAidServiceInfo> getServicesAidInfo (int UserID , String category) throws IOException{
+        try {
+            return sNxpService.getServicesAidInfo(UserID ,category);
+        }catch(RemoteException e)
+        {
+            e.printStackTrace();
+            attemptDeadServiceRecovery(e);
+            return null;
+        }
+    }
     /**
      * @hide
      */ 
@@ -319,6 +346,72 @@ public final class NxpNfcAdapter {
             Log.e(TAG, "getActiveSecureElementList: failed", e);
             attemptDeadServiceRecovery(e);
             throw new IOException("Failure in deselecting the selected Secure Element");
+        }
+    }
+
+    /**
+     * This api is called by applications to get the maximum routing table for AID registration
+     * The returned value doesn't provide the current remaining size available for AID.
+     * This value depends on the size available in NFCC and is constant.
+     * <p>Requires {@link android.Manifest.permission#NFC} permission.
+     * @return maximum routing table size for AID registration.
+     * @throws  IOException if any exception occurs while retrieving the size.
+     */
+    public int getMaxAidRoutingTableSize() throws IOException{
+        try{
+            return sNxpService.getMaxAidRoutingTableSize();
+        }catch(RemoteException e){
+            e.printStackTrace();
+            attemptDeadServiceRecovery(e);
+            return 0x00;
+        }
+    }
+
+    /**
+     * This api is called by applications to get the size of AID data which is already committed
+     * to routing table in NFCC.
+     * <p>Requires {@link android.Manifest.permission#NFC} permission.
+     * @return  occupied size of routing table for AID registrations.
+     * @throws  IOException if any exception occurs while retrieving the size.
+     */
+    public int getCommittedAidRoutingTableSize() throws IOException{
+        try{
+            return sNxpService.getCommittedAidRoutingTableSize();
+        }catch(RemoteException e){
+            e.printStackTrace();
+            attemptDeadServiceRecovery(e);
+            return 0x00;
+        }
+    }
+
+    /**
+     * This api is called by applications to update the service state of card emualation
+     * services.
+     * <p>This api is implemented for  {@link android.nfc.cardemulation.CardEmulation#CATEGORY_OTHER}.
+     * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
+     * <li>This api should be called only when the intent AID routing
+     *     table full is sent by NfcService.
+     * <li>The service state change is persistent for particular UserId.
+     * <li>The service state is written to the Xml and read
+     *     before every routing table  change.
+     * <li>If there is any change in routing table  the routing table is updated to NFCC
+     *     after calling this api.
+     * </ul>
+     * @param  serviceState Map of ServiceName and state of service.
+     * @return whether  the update of Card Emulation services is
+     *          success or not.
+     *          0xFF - failure
+     *          0x00 - success
+     * @throws  IOException if any exception occurs during the service state change.
+     */
+    public int updateServiceState(Map<String , Boolean> serviceState) throws IOException{
+        try {
+            return sNxpService.updateServiceState(UserHandle.myUserId() , serviceState);
+        }catch(RemoteException e)
+        {
+            e.printStackTrace();
+            attemptDeadServiceRecovery(e);
+            return 0xFF;
         }
     }
 

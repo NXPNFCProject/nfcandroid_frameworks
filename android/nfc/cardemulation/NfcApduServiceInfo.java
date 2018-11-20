@@ -521,6 +521,19 @@ public final class NfcApduServiceInfo extends ApduServiceInfo implements Parcela
         return groups;
     }
 
+    public String getOtherAidGroupDescription(){
+        String otherAidGroupDescription = null;
+        if(mStaticNfcAidGroups.containsKey(CardEmulation.CATEGORY_OTHER))
+            otherAidGroupDescription = mStaticNfcAidGroups.get(CardEmulation.CATEGORY_OTHER).description;
+        else if (mDynamicNfcAidGroups.containsKey(CardEmulation.CATEGORY_OTHER))
+            otherAidGroupDescription = mDynamicNfcAidGroups.get(CardEmulation.CATEGORY_OTHER).description;
+        else
+            Log.e(TAG, "getOtherAidGroupDescription: " + "Aid Group with OTHER category not available");
+
+            Log.e(TAG, "getOtherAidGroupDescription: " + otherAidGroupDescription);
+            return otherAidGroupDescription;
+    }
+
     public ESeInfo getSEInfo() {
         return mSeExtension;
     }
@@ -661,7 +674,7 @@ public final class NfcApduServiceInfo extends ApduServiceInfo implements Parcela
         }
     };
         public boolean isServiceEnabled(String category) {
-            if(category != CardEmulation.CATEGORY_OTHER) {
+            if(!category.equals(CardEmulation.CATEGORY_OTHER)) {
                 return true;
             }
 
@@ -709,7 +722,7 @@ public final class NfcApduServiceInfo extends ApduServiceInfo implements Parcela
         }
 
         public int getServiceState(String category) {
-            if(category != CardEmulation.CATEGORY_OTHER) {
+            if(!category.equals(CardEmulation.CATEGORY_OTHER)) {
                 return NfcConstants.SERVICE_STATE_ENABLED;
             }
 
@@ -717,7 +730,7 @@ public final class NfcApduServiceInfo extends ApduServiceInfo implements Parcela
         }
 
         public int setServiceState(String category ,int state) {
-            if(category != CardEmulation.CATEGORY_OTHER) {
+            if(!category.equals(CardEmulation.CATEGORY_OTHER)) {
                 return NfcConstants.SERVICE_STATE_ENABLED;
             }
 
@@ -733,7 +746,7 @@ public final class NfcApduServiceInfo extends ApduServiceInfo implements Parcela
          *        TRUE if the commit was successful
          */
         public void updateServiceCommitStatus(String category ,boolean commitStatus) {
-            if(category != CardEmulation.CATEGORY_OTHER) {
+            if(!category.equals(CardEmulation.CATEGORY_OTHER)) {
                 return;
             }
             Log.d(TAG, "updateServiceCommitStatus:Description:" + mDescription + ":InternalState:" + mServiceState + ":commitStatus:"+ commitStatus);
