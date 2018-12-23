@@ -36,6 +36,8 @@ interface INxpNfcAdapter
     byte[] readerPassThruMode(byte status, byte modulationTyp);
     byte[] transceiveAppData(in byte[] data);
     int setConfig(String configs , String pkg);
+    String semsGetOutputData();
+    boolean semsGetExecutionStatus();
     int selectUicc(int uiccSlot);
     int getMaxAidRoutingTableSize();
     int getCommittedAidRoutingTableSize();

@@ -475,6 +475,48 @@ public final class NxpNfcAdapter {
         }
     }
     /**
+     * This api is called by applications to get last executed sems script output response
+     * in form of string format
+     * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
+     * <li>This api shall be called only Nfcservice is enabled.
+     * <li>This api shall be called only when there are no NFC transactions ongoing
+     * </ul>
+     * @return Return SEMS output response file is string format
+     *          Valid string in case of success
+     *          Return NULL in error case
+     * @throws  IOException if any exception occurs during .
+     */
+    public String semsGetOutputData() throws IOException {
+      try {
+          return sNxpService.semsGetOutputData();
+      } catch(RemoteException e) {
+          e.printStackTrace();
+          attemptDeadServiceRecovery(e);
+          return null;
+      }
+    }
+    /**
+     * This api is called by applications to get last executed sems script
+     * execution status
+     * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
+     * <li>This api shall be called only Nfcservice is enabled.
+     * <li>This api shall be called only when there are no NFC transactions ongoing
+     * </ul>
+     * @return Return last executed SEMS script execution status
+     *          SUCCESS if previous script execution is success
+     *          FAILED  if previous script execution failed
+     * @throws  IOException if any exception occurs during .
+     */
+    public boolean semsGetExecutionStatus() throws IOException {
+        try {
+            return sNxpService.semsGetExecutionStatus();
+        } catch(RemoteException e) {
+            e.printStackTrace();
+            attemptDeadServiceRecovery(e);
+            return false;
+        }
+      }
+    /**
      * This api is called by applications to select the UICC slot. Selected Slot
      * will be activated for all type of CE from UICC.
      * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
