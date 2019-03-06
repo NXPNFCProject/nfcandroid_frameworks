@@ -119,9 +119,9 @@ public final class NfcApduServiceInfo extends ApduServiceInfo implements Parcela
             ArrayList<NfcAidGroup> staticNfcAidGroups, ArrayList<NfcAidGroup> dynamicNfcAidGroups,
             boolean requiresUnlock, int bannerResource, int uid,
             String settingsActivityName, ESeInfo seExtension,boolean modifiable){
-        super(info, onHost, description, nfcAidGroups2AidGroups(staticNfcAidGroups), nfcAidGroups2AidGroups(dynamicNfcAidGroups),
-                requiresUnlock, bannerResource, uid, settingsActivityName);
-        this.mModifiable = modifiable;        
+        super(info, description, nfcAidGroups2AidGroups(staticNfcAidGroups), nfcAidGroups2AidGroups(dynamicNfcAidGroups),
+                requiresUnlock, bannerResource, uid, settingsActivityName, null,null);
+        this.mModifiable = modifiable;
         this.mServiceState = NfcConstants.SERVICE_STATE_ENABLING;
         this.mStaticNfcAidGroups = new HashMap<String, NfcAidGroup>();
         this.mDynamicNfcAidGroups = new HashMap<String, NfcAidGroup>();
@@ -409,10 +409,10 @@ public final class NfcApduServiceInfo extends ApduServiceInfo implements Parcela
      * @return An ApduServiceInfo object which can be correctly serialized as parcel
      */
     public ApduServiceInfo createApduServiceInfo() {
-        return new ApduServiceInfo(this.getResolveInfo(), this.isOnHost(), this.getDescription(),
+        return new ApduServiceInfo(this.getResolveInfo(), this.getDescription(),
             nfcAidGroups2AidGroups(this.getStaticNfcAidGroups()), nfcAidGroups2AidGroups(this.getDynamicNfcAidGroups()),
             this.requiresUnlock(), this.getBannerId(), this.getUid(),
-            this.getSettingsActivityName());
+            this.getSettingsActivityName(), null, null);
     }
 
     /**
