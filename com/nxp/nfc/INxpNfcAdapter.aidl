@@ -15,7 +15,6 @@
   */
 package com.nxp.nfc;
 
-import com.nxp.nfc.gsma.internal.INxpNfcController;
 import com.nxp.nfc.INxpNfcAdapterExtras;
 import com.nxp.nfc.NfcAidServiceInfo;
 /**
@@ -23,7 +22,6 @@ import com.nxp.nfc.NfcAidServiceInfo;
  */
 interface INxpNfcAdapter
 {
-    INxpNfcController getNxpNfcControllerInterface();
     void DefaultRouteSet(int routeLoc, boolean fullPower, boolean lowPower, boolean noPower);
     void MifareDesfireRouteSet(int routeLoc, boolean fullPower, boolean lowPower, boolean noPower);
     void MifareCLTRouteSet(int routeLoc, boolean fullPower, boolean lowPower, boolean noPower);

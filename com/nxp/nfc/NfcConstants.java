@@ -207,7 +207,6 @@ public final class NfcConstants {
 
     public static final String PERMISSIONS_NFC = "android.permission.NFC";
 
-    public static final String ACTION_MULTI_EVT_TRANSACTION = "com.gsma.services.nfc.action.TRANSACTION_EVENT";
     public static final String ACTION_CHECK_X509 = "org.simalliance.openmobileapi.service.ACTION_CHECK_X509";
     public static final String SET_PACKAGE_NAME = "org.simalliance.openmobileapi.service";
     public static final String EXTRA_SE_NAME = "org.simalliance.openmobileapi.service.EXTRA_SE_NAME";
@@ -215,12 +214,6 @@ public final class NfcConstants {
     public static final String EXTRA_RESULT = "org.simalliance.openmobileapi.service.extra.EXTRA_RESULT";
 
     public static final String ACTION_CHECK_X509_RESULT = "org.simalliance.openmobileapi.service.ACTION_CHECK_X509_RESULT";
-    public static final String PERMISSIONS_TRANSACTION_EVENT = "com.gsma.services.nfc.permission.TRANSACTION_EVENT";
-    public static final String EXTRA_GSMA_AID = "com.gsma.services.nfc.extra.AID";
-    public static final String EXTRA_GSMA_DATA = "com.gsma.services.nfc.extra.DATA";
-    public static final String EXTRA_GSMA_PREV_PAYMENT_COMPONENT = "com.gsma.services.nfc.extra.PREV_PAYMENT_COMPONENT";
-    public static final String ACTION_GSMA_ENABLE_NFC = "com.gsma.services.nfc.action.ENABLE_NFC";
-    public static final String ACTION_GSMA_ENABLE_SET_FLAG = "com.gsma.services.nfc.action.ENABLE_NFC_SET_FALG";
 
     /**
      * Indicates the states of an APDU service.

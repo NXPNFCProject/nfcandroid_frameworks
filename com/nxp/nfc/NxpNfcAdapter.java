@@ -30,7 +30,6 @@ import android.os.ServiceManager;
 import java.io.IOException;
 import android.os.UserHandle;
 import android.os.RemoteException;
-import com.nxp.nfc.gsma.internal.INxpNfcController;
 
 import android.util.Log;
 import java.util.List;
@@ -353,21 +352,6 @@ public final class NxpNfcAdapter {
         }
     }
 
-   /**
-    * Get the handle to an INxpNfcController Interface
-    * @hide
-    */
-    public INxpNfcController getNxpNfcControllerInterface() {
-        if(sService == null) {
-            throw new UnsupportedOperationException("You need a reference from NfcAdapter to use the "
-                    + " NXP NFC APIs");
-        }
-        try {
-            return sNxpService.getNxpNfcControllerInterface();
-        }catch(RemoteException e) {
-            return null;
-        }
-    }
      /**
      * Get the Active Secure Element List
      * <p>Requires {@link android.Manifest.permission#NFC} permission.
