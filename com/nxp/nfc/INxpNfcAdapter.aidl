@@ -43,4 +43,6 @@ interface INxpNfcAdapter
     int getCommittedAidRoutingTableSize();
     int getSelectedUicc();
     int updateServiceState(int userId , in Map serviceState);
+    int activateSeInterface();
+    int deactivateSeInterface();
 }
