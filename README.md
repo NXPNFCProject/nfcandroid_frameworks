@@ -6,7 +6,7 @@ This Repo contains any additional information/files required to support the rele
 
 | DESCRIPTION        | CHECKOUT COMMAND          |
 | :-------------: |:-------------:| 
-| nfcandroid_nxp_ese_clients    |  git clone https://github.com/NXPNFCProject/nfcandroid_frameworks.git |
+| nfcandroid_frameworks   |  git clone https://github.com/NXPNFCProject/nfcandroid_frameworks.git |
 
 
 #### Supported Versions on "br_android_ncihalx_q Branch for Android Q Master
