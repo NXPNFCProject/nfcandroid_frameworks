@@ -19,12 +19,31 @@ package com.nxp.sems.channel;
 import com.nxp.sems.channel.SemsOmapiApduChannel;
 import android.content.Context;
 import com.nxp.sems.SemsException;
+import android.util.Log;
 
 public class SemsApduChannelFactory {
   public static final byte OMAPI_CHANNEL = 0;
   public static final byte RAW_CHANNEL = 1;
+  public static ISemsApduChannel mChannelFactory = null;
+  public static final String TAG = "SEMS-SemsApduChannelFactory";
 
-  public ISemsApduChannel createApduChannel(byte type, Context context,
+  public static ISemsApduChannel getInstance(byte type, Context context,
+          byte terminalID) throws SemsException{
+    if(mChannelFactory == null) {
+      synchronized (SemsApduChannelFactory.class) {
+        if(mChannelFactory == null) {
+          Log.d(TAG, "SemsApduChannelFactory Initialization");
+          mChannelFactory = (ISemsApduChannel) SemsApduChannelFactory.
+                                 createApduChannel(type, context, terminalID);
+        }
+      }
+    }
+    return mChannelFactory;
+  }
+
+  private SemsApduChannelFactory() {}
+
+  private static ISemsApduChannel createApduChannel(byte type, Context context,
                                            byte terminalID)
       throws SemsException {
     ISemsApduChannel mSemsApduChannel = null;

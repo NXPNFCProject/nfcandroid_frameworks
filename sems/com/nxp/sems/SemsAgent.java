@@ -39,7 +39,7 @@ public final class SemsAgent {
   public static final byte SEMS_STATUS_DENIED = 0x03;
   public static final byte SEMS_STATUS_UNKNOWN = 0x0F;
   public static final short major = 0;
-  public static final short minor = 3;
+  public static final short minor = 4;
 
   private static SemsAgent sInstance;
   private static Context sContext = null;
@@ -87,7 +87,7 @@ public final class SemsAgent {
     if (inputScriptBuffer == null) {
       throw new SemsException("Invalid/Null Input script");
     }
-    mSemsApduChannel = new SemsApduChannelFactory().createApduChannel(
+    mSemsApduChannel = SemsApduChannelFactory.getInstance(
         SemsApduChannelFactory.OMAPI_CHANNEL, sContext, sTerminalID);
     mExecutor = SemsExecutor.getInstance(mSemsApduChannel, sContext);
     SemsStatus status =
