@@ -26,5 +26,5 @@ import android.content.Intent;
 interface INxpNfcAdapterExtras {
     boolean reset(in String pkg);
     Bundle getAtr(in String pkg);
-    int accessControlForCOSU (int mode);
+    boolean accessControlForCOSU (int mode);
 }
