@@ -1,0 +1,18 @@
+
+
+//#######################################
+// com.nxp.nfc - library
+//#######################################
+java_library {
+
+    name: "com.nxp.nfc",
+    installable: true,
+    required: ["com.nxp.nfc.xml"],
+
+    srcs: [
+        "com/**/I*.aidl",
+        "com/**/*.java",
+        "android/**/*.java",
+    ],
+
+}
