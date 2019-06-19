@@ -607,6 +607,7 @@ public class SemsExecutor {
                                             callerPackageName.getBytes());
             if (SemsUtil.getSW(rapdu) != (short)0x9000) {
               closeLogicalChannel(channelNumber);
+              updateSemsStatus(rapdu);
               return Arrays.copyOfRange(rapdu, rapdu.length - 2, rapdu.length);
             }
           }
