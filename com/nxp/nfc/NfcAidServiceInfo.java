@@ -34,9 +34,6 @@ import java.lang.reflect.Field;
 public final class NfcAidServiceInfo implements Parcelable {
 
     static final String TAG = "NfcAidServiceInfo";
-    /**
-     * Mapping from category to static APDU pattern group
-     */
     String mComponentName;
     int  mAidSize;
     boolean  mState;

@@ -199,70 +199,6 @@ public final class NfcApduServiceInfo extends ApduServiceInfo implements Parcela
                 AidGroup aidg = stringaidgroup.getValue();
                 mDynamicNfcAidGroups.put(category, new NfcAidGroup(aidg));
             }
-            final int depth = parser.getDepth();
-            NfcAidGroup.ApduPatternGroup currApduPatternGroup = null;
-            NfcAidGroup aidGroup = null;
-            while (((eventType = parser.next()) != XmlPullParser.END_TAG || parser.getDepth() > depth)
-                    && eventType != XmlPullParser.END_DOCUMENT) {
-                tagName = parser.getName();
-                if (!onHost && eventType == XmlPullParser.START_TAG && "apdu-pattern-group".equals(tagName) &&
-                    currApduPatternGroup == null) {
-                    Log.e(TAG, "apdu-pattern-group");
-                    final TypedArray groupAttrs = res.obtainAttributes(attrs,
-                            com.android.internal.R.styleable.ApduPatternGroup);
-                    String groupDescription = groupAttrs.getString(
-                            com.android.internal.R.styleable.ApduPatternGroup_description);
-                    Log.e(TAG, "apdu-pattern-group description"+groupDescription);
-                    aidGroup = mStaticNfcAidGroups.get(CardEmulation.CATEGORY_OTHER);
-                    currApduPatternGroup = new NfcAidGroup.ApduPatternGroup(groupDescription);
-                    if (aidGroup != null) {
-                        /*
-                        if (!CardEmulation.CATEGORY_OTHER.equals(groupCategory)) {
-                            Log.e(TAG, "Not allowing multiple aid-groups in the " +
-                                    groupCategory + " category");
-                            currentGroup = null;
-                        }*/
-                    } else {
-                        List<String> aids = new ArrayList<String>();
-                        AidGroup group;
-                        try {
-                            group = new AidGroup(CardEmulation.CATEGORY_OTHER, groupDescription);
-                            aidGroup = new NfcAidGroup(CardEmulation.CATEGORY_OTHER, groupDescription);
-                        } catch (IllegalArgumentException e) {
-                          e.printStackTrace();
-                        }
-                        mStaticNfcAidGroups.put(CardEmulation.CATEGORY_OTHER ,aidGroup);
-                    }
-                    groupAttrs.recycle();
-                } else if (!onHost && eventType == XmlPullParser.END_TAG && "apdu-pattern-group".equals(tagName) &&
-                    currApduPatternGroup != null) {
-                    Log.e(TAG, "apdu-pattern-group end");
-                    if(currApduPatternGroup.getApduPattern().size() > 0x00) {
-                        aidGroup.addApduGroup(currApduPatternGroup);
-                    }
-                    Log.e(TAG, "apdu-pattern-group end");
-                } else if (!onHost && eventType == XmlPullParser.START_TAG && "apdu-pattern-filter".equals(tagName) &&
-                    currApduPatternGroup != null) {
-                    Log.e(TAG, "apdu pattern enter");
-                    TypedArray a = res.obtainAttributes(attrs,
-                            com.android.internal.R.styleable.ApduPatternFilter);
-                    String description = a.getString(com.android.internal.R.styleable.ApduPatternFilter_description); //.toUpperCase();
-                    //String reference_data = a.getString(com.android.internal.R.styleable.ApduPatternFilter_referenceData); //.toUpperCase();
-                    String reference_data = a.getString(com.android.internal.R.styleable.ApduPatternFilter_referenceData); //.toUpperCase();
-                    String mask = a.getString(com.android.internal.R.styleable.ApduPatternFilter_apduMask); //.toUpperCase();
-                    Log.e(TAG, "valid apdu pattern"+ reference_data + mask + description);
-                    Log.e(TAG, "valid apdu pattern reference_data"+com.android.internal.R.styleable.ApduPatternFilter_referenceData);
-                    Log.e(TAG, "valid apdu pattern reference_mask"+com.android.internal.R.styleable.ApduPatternFilter_apduMask);
-                    Log.e(TAG, "valid apdu pattern description"+com.android.internal.R.styleable.ApduPatternFilter_description);
-                    if (isValidApduString(reference_data) && isValidApduString(mask)) {
-                        NfcAidGroup.ApduPattern apdu = mStaticNfcAidGroups.get(CardEmulation.CATEGORY_OTHER).new ApduPattern(reference_data, mask,description);
-                        currApduPatternGroup.addApduPattern(apdu);
-                    } else {
-                        Log.e(TAG, "Ignoring invalid apdu pattern: " + reference_data);
-                    }
-                    Log.e(TAG, "valid apdu pattern"+ reference_data+mask+description);
-                }
-            }
         } catch (NameNotFoundException e) {
             throw new XmlPullParserException("Unable to create context for: " + si.packageName);
         } finally {
@@ -793,33 +729,6 @@ public final class NfcApduServiceInfo extends ApduServiceInfo implements Parcela
                 pw.println("    Service State: " + serviceStateToString(mServiceState));
             }
         }
-
-    /**
-     * A valid APDU pattern according to ISO/IEC 7816-4:
-     * <ul>
-     * <li>Has >= 1 bytes and <=124 bytes (>=2 hex chars and <= 248 hex chars)
-     * <li>Consist of only hex characters
-     * </ul>
-     *
-     * @hide
-     */
-    public static boolean isValidApduString(String apdu) {
-        if (apdu == null)
-            return false;
-
-        if (apdu.length() < 2 || apdu.length() > 248 || ((apdu.length() % 2) != 0)) {
-            Log.e(TAG, "APDU " + apdu + " is not a valid apdu pattern.");
-            return false;
-        }
-
-        // Verify hex characters
-        if (!apdu.matches("[0-9A-Fa-f]{2,248}")) {
-            Log.e(TAG, "APDU " + apdu + " is not a valid apdu pattern.");
-            return false;
-        }
-
-        return true;
-    }
 
         public static class ESeInfo implements Parcelable {
             final int seId;
