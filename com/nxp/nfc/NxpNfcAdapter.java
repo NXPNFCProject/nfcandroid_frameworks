@@ -210,7 +210,7 @@ public final class NxpNfcAdapter {
     /**
      * @hide
      */
-    private static INxpNfcAdapter getNxpNfcAdapterInterface() {
+    public static INxpNfcAdapter getNxpNfcAdapterInterface() {
       if (sService == null) {
         throw new UnsupportedOperationException(
             "You need a reference from NfcAdapter to use the "
@@ -597,6 +597,52 @@ public final class NxpNfcAdapter {
         e.printStackTrace();
         attemptDeadServiceRecovery(e);
         return 0xFF;
+      }
+    }
+
+    /**
+     * This api is called by applications to enable or disable field
+     * detect feauture.
+     * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
+     * <li>This api shall be called only if Nfcservice is enabled.
+     * </ul>
+     * @param  Mode to Enable(true) and Disable(false)
+     * @return whether  the update of configuration is
+     *          success or not with reason.
+     *          0x01  - NFC_IS_OFF,
+     *          0x02  - NFC_BUSY_IN_MPOS
+     *          0x03  - ERROR_UNKNOWN
+     *          0x00  - SUCCESS
+     */
+    public int setFieldDetectMode(boolean mode) {
+      try {
+        return sNxpService.setFieldDetectMode(mode);
+      } catch (RemoteException e) {
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        return 0x03; /*ERROR_UNKNOWN*/
+      }
+    }
+
+    /**
+     * This api is called by applications to check whether field
+     * detect feature is enabled or not
+     * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
+     * <li>This api shall be called only if Nfcservice is enabled.
+     * </ul>
+     * @param  None
+     * @return whether  the feature is enabled(true) disabled (false)
+     *          success or not.
+     *          Enabled  - true
+     *          Disabled - false
+     */
+    public boolean isFieldDetectEnabled() {
+      try {
+        return sNxpService.isFieldDetectEnabled();
+      } catch (RemoteException e) {
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        return false;
       }
     }
 }

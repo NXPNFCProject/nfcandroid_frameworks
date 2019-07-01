@@ -42,4 +42,6 @@ interface INxpNfcAdapter
     int getCommittedAidRoutingTableSize();
     int getSelectedUicc();
     int updateServiceState(int userId , in Map serviceState);
+    int setFieldDetectMode(boolean mode);
+    boolean isFieldDetectEnabled();
 }
