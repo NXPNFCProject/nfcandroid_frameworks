@@ -1,0 +1,16 @@
+//#######################################
+// com.nxp.ls - library
+//#######################################
+java_library {
+
+    name: "com.nxp.sems",
+    installable: true,
+    vendor: true,
+    required: ["com.nxp.sems.xml"],
+
+    srcs: [
+        "com/**/I*.aidl",
+        "com/**/*.java",
+    ],
+
+}
