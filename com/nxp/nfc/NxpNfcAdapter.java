@@ -648,4 +648,49 @@ public final class NxpNfcAdapter {
         return false;
       }
     }
+
+    /**
+     * This api is called by applications to Activate Secure Element Interface.
+     * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
+     * <li>This api shall be called only Nfcservice is enabled.
+     * </ul>
+     * @return whether  the update of configuration is
+     *          success or not.
+     *          0x03 - failure
+     *          0x00 - success
+     *          0xFF - Service Unavialable
+     * @throws  IOException if any exception occurs during setting the NFC
+     * configuration.
+     */
+    public int activateSeInterface() throws IOException {
+      try {
+        return sNxpService.activateSeInterface();
+      } catch (RemoteException e) {
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        return 0xFF;
+      }
+    }
+    /**
+     * This api is called by applications to Deactivate Secure Element Interface.
+     * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
+     * <li>This api shall be called only Nfcservice is enabled.
+     * </ul>
+     * @return whether  the update of configuration is
+     *          success or not.
+     *          0x03 - failure
+     *          0x00 - success
+     *          0xFF - Service Unavialable
+     * @throws  IOException if any exception occurs during setting the NFC
+     * configuration.
+     */
+    public int deactivateSeInterface() throws IOException {
+      try {
+        return sNxpService.deactivateSeInterface();
+      } catch (RemoteException e) {
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        return 0xFF;
+      }
+    }
 }
