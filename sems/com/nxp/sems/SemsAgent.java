@@ -39,7 +39,7 @@ public final class SemsAgent {
   public static final byte SEMS_STATUS_DENIED = 0x03;
   public static final byte SEMS_STATUS_UNKNOWN = 0x0F;
   public static final short major = 0;
-  public static final short minor = 5;
+  public static final short minor = 6;
 
   private static SemsAgent sInstance;
   private static Context sContext = null;

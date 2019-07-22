@@ -739,10 +739,20 @@ public class SemsExecutor {
             scriptTlvs.subList(0, linePointer).clear();
             linePointer = 0;
             Log.d(TAG, "Switch to new AID");
-            if (scriptTlvs.size() > 0)
+            if (scriptTlvs.size() > 0) {
               mState = SEMS_STATE_SELECT;
-            else
+              Log.d(TAG, "Continue buffered script");
+            } else {
               mState = SEMS_STATE_SECURE_COMMAND_PROCESSING;
+              Log.d(TAG, "Finished buffered script");
+              SemsStatus mstatus = SelectSems();
+              if (mstatus == SemsStatus.SEMS_STATUS_SUCCESS) {
+                Log.d(TAG, "Successful selection of SEMS update");
+              } else if (mstatus == SemsStatus.SEMS_STATUS_FAILED) {
+                Log.d(TAG, "Selection failed for SEMS update");
+              }
+              rapdu = rapduSelect;
+            }
             /*continue restart_execute_script;*/
             break;
           } else if ((sw != (short)0x9000) && (sw != (short)0x6300)) {
