@@ -46,4 +46,6 @@ interface INxpNfcAdapter
     int deactivateSeInterface();
     int setFieldDetectMode(boolean mode);
     boolean isFieldDetectEnabled();
+    int doWriteT4tData(in byte[] fileId, in byte[] data, int length);
+    byte[] doReadT4tData(in byte[] fileId);
 }

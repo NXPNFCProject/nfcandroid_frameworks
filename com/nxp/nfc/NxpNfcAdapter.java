@@ -693,4 +693,50 @@ public final class NxpNfcAdapter {
         return 0xFF;
       }
     }
+
+    /**
+     * This API performs writes of T4T data to Nfcee.
+     * @param fileId File Id to which to write
+     * @param data data bytes to be written
+     * @param length current data length
+     * @return number of bytes written if success else negative number of
+                error code listed as here .
+                -1  STATUS_FAILED
+                -2  ERROR_RF_ACTIVATED
+                -3  ERROR_MPOS_ON
+                -4  ERROR_NFC_NOT_ON
+                -5  ERROR_INVALID_FILE_ID
+                -6  ERROR_INVALID_LENGTH
+                -7  ERROR_CONNECTION_FAILED
+                -8  ERROR_EMPTY_PAYLOAD
+                -9  ERROR_NDEF_VALIDATION_FAILED
+     * <p>Requires {@link   android.Manifest.permission#NFC} permission.
+     */
+    public int doWriteT4tData(byte[] fileId, byte[] data, int length) {
+      try {
+        return sNxpService.doWriteT4tData(fileId, data, length);
+      } catch (RemoteException e) {
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        return -1;
+      }
+    }
+
+    /**
+     * This API performs reading of T4T content of Nfcee.
+     * @param fileId : File Id from which to read
+     * @return read bytes :-Returns read message if success
+     *                      Returns null if failed to read
+     *                      Returns 0xFF if file is empty.
+     * <p>Requires {@link   android.Manifest.permission#NFC} permission.
+     */
+    public byte[] doReadT4tData(byte[] fileId) {
+      try {
+        return sNxpService.doReadT4tData(fileId);
+      } catch (RemoteException e) {
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        return null;
+      }
+    }
 }
