@@ -243,6 +243,35 @@ public final class NxpNfcAdapter {
         Log.e(TAG, "changeDiscoveryTech failed", e);
       }
     }
+
+    /**
+     * This API is called by application to execute the analog self test
+     * <p>Requires {@link android.Manifest.permission#NFC} permission.
+     * <li>This api shall be called only Nfcservice is enabled.
+     * </ul>
+     * @param  type, type of the analog slef test
+     * @return status
+     * @throws IOException If a failure occurred during nfcSelfTest
+     * @hide
+     */
+    public int nfcSelfTest(int type) throws IOException {
+        int status = 0xFF;
+        if (sNxpService == null) {
+        throw new UnsupportedOperationException(
+            "You need a context on NxpNfcAdapter to use the "
+            + " NXP NFC extras APIs");
+        }
+        try {
+            status = sNxpService.nfcSelfTest(type);
+        } catch(RemoteException e) {
+            Log.e(TAG, "RemoteException in nfcSelfTest(): ", e);
+            e.printStackTrace();
+            attemptDeadServiceRecovery(e);
+            throw new IOException("RemoteException in nfcSelfTest()");
+        }
+        return status;
+    }
+
     /**
      * @hide
      */
