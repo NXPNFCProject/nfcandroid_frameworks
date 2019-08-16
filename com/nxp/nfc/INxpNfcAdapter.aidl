@@ -42,7 +42,11 @@ interface INxpNfcAdapter
     int getCommittedAidRoutingTableSize();
     int getSelectedUicc();
     int updateServiceState(int userId , in Map serviceState);
+    int activateSeInterface();
+    int deactivateSeInterface();
     int setFieldDetectMode(boolean mode);
     boolean isFieldDetectEnabled();
+    int doWriteT4tData(in byte[] fileId, in byte[] data, int length);
+    byte[] doReadT4tData(in byte[] fileId);
     int nfcSelfTest(int type);
 }
