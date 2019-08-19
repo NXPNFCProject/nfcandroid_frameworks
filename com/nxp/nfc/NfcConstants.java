@@ -2,7 +2,7 @@
 *
 *  The original Work has been changed by NXP Semiconductors.
 *
-*  Copyright (C) 2013-2014 NXP Semiconductors
+*  Copyright (C) 2013-2019 NXP Semiconductors
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -180,12 +180,36 @@ public final class NfcConstants {
       "com.nxp.nfc_extras.action.NFC_MPOS_READER_MODE_START_FAIL";
 
   /**
+   * Intent received when the SWP Reader needs to restart.
+   *
+   */
+  @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
+  public static final String ACTION_NFC_MPOS_READER_MODE_RESTART =
+      "com.nxp.nfc_extras.action.NFC_MPOS_READER_MODE_RESTART";
+
+  /**
+   * Intent received when reader is activated.
+   *
+   */
+  @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
+  public static final String ACTION_NFC_MPOS_READER_MODE_ACTIVATED =
+      "com.nxp.nfc_extras.action.NFC_MPOS_READER_MODE_ACTIVATED";
+
+  /**
    * Intent received when the SWP Reader is disconnected from card.
    *
    */
   @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
   public static final String ACTION_NFC_MPOS_READER_MODE_STOP_SUCCESS =
       "com.nxp.nfc_extras.action.NFC_MPOS_READER_MODE_STOP_SUCCESS";
+
+  /**
+   * Intent received when the SWP Reader is disconnected from card.
+   *
+   */
+  @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
+  public static final String ACTION_NFC_MPOS_READER_MODE_STOP_FAIL =
+      "com.nxp.nfc_extras.action.NFC_MPOS_READER_MODE_STOP_FAIL";
 
   /**
    * Intent received when the SWP Reader transcation is done.
@@ -204,12 +228,12 @@ public final class NfcConstants {
       "com.nxp.nfc_extras.action.NFC_MPOS_READER_MODE_TIMEOUT";
 
   /**
-   * Intent received when the SWP Reader needs to restart.
+   * Intent received when multiple cards detected during SWP reader operation.
    *
    */
   @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
-  public static final String ACTION_NFC_MPOS_READER_MODE_RESTART =
-      "com.nxp.nfc_extras.action.NFC_MPOS_READER_MODE_RESTART";
+  public static final String ACTION_NFC_MPOS_READER_MODE_MULTIPLE_TARGET_DETECTED =
+      "com.nxp.nfc_extras.action.NFC_MPOS_READER_MODE_MULTIPLE_TARGET_DETECTED";
 
   public static final String ACTION_ROUTING_TABLE_FULL =
       "nfc.intent.action.AID_ROUTING_TABLE_FULL";
