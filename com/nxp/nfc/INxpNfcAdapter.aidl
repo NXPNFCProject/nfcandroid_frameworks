@@ -24,6 +24,9 @@ import com.nxp.nfc.NfcAidServiceInfo;
 interface INxpNfcAdapter
 {
     INxpNfcController getNxpNfcControllerInterface();
+    void DefaultRouteSet(int routeLoc, boolean fullPower, boolean lowPower, boolean noPower);
+    void MifareDesfireRouteSet(int routeLoc, boolean fullPower, boolean lowPower, boolean noPower);
+    void MifareCLTRouteSet(int routeLoc, boolean fullPower, boolean lowPower, boolean noPower);
     List<NfcAidServiceInfo> getServicesAidInfo(int userId, String category);
     int[] getActiveSecureElementList(String pkg);
     INxpNfcAdapterExtras getNxpNfcAdapterExtrasInterface();

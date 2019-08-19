@@ -116,18 +116,82 @@ public final class NxpNfcAdapter {
         return;
     }
     /**
-     * This api returns the CATEGORY_OTHER (non Payment)Services registered by the user
-     * along with the size of the registered aid group.
-     * This api has to be called when aid routing full intent is broadcast by the system.
+     * Set listen mode routing table configuration for Mifare Desfire Route.
+     * routeLoc is parameter which fetch the text from UI and compare
+     * <p>Requires {@link android.Manifest.permission#NFC} permission.
+     *
+     * @throws IOException If a failure occurred during Mifare Desfire Route
+     * set.
+     */
+    public void MifareDesfireRouteSet(String routeLoc, boolean fullPower,
+                                      boolean lowPower, boolean noPower)
+        throws IOException {
+      try {
+        int seID = 0;
+        boolean result = false;
+        if (routeLoc.equals(NfcConstants.UICC_ID)) {
+          seID = NfcConstants.UICC_ID_TYPE;
+        } else if (routeLoc.equals(NfcConstants.UICC2_ID)) {
+          seID = NfcConstants.UICC2_ID_TYPE;
+        } else if (routeLoc.equals(NfcConstants.SMART_MX_ID)) {
+          seID = NfcConstants.SMART_MX_ID_TYPE;
+        } else if (routeLoc.equals(NfcConstants.HOST_ID)) {
+          seID = NfcConstants.HOST_ID_TYPE;
+        } else {
+          Log.e(TAG, "confMifareDesfireProtoRoute: wrong default route ID");
+          throw new IOException(
+              "confMifareProtoRoute failed: Wrong default route ID");
+        }
+        Log.i(TAG, "calling Services");
+        sNxpService.MifareDesfireRouteSet(seID, fullPower, lowPower, noPower);
+      } catch (RemoteException e) {
+        Log.e(TAG, "confMifareDesfireProtoRoute failed", e);
+        attemptDeadServiceRecovery(e);
+        throw new IOException("confMifareDesfireProtoRoute failed");
+      }
+    }
+    /**
+     * Set listen mode routing table configuration for MifareCLTRouteSet.
+     * routeLoc is parameter which fetch the text from UI and compare
+     * <p>Requires {@link android.Manifest.permission#NFC} permission.
+     *
+     * @throws IOException If a failure occurred during Mifare CLT Route set.
+     */
+    public void MifareCLTRouteSet(String routeLoc, boolean fullPower,
+                                  boolean lowPower, boolean noPower)
+        throws IOException {
+      try {
+        int seID = 0;
+        boolean result = false;
+        if (routeLoc.equals(NfcConstants.UICC_ID)) {
+          seID = NfcConstants.UICC_ID_TYPE;
+        } else if (routeLoc.equals(NfcConstants.UICC2_ID)) {
+          seID = NfcConstants.UICC2_ID_TYPE;
+        } else if (routeLoc.equals(NfcConstants.SMART_MX_ID)) {
+          seID = NfcConstants.SMART_MX_ID_TYPE;
+        } else if (routeLoc.equals(NfcConstants.HOST_ID)) {
+          seID = NfcConstants.HOST_ID_TYPE;
+        } else {
+          Log.e(TAG, "confMifareCLT: wrong default route ID");
+          throw new IOException("confMifareCLT failed: Wrong default route ID");
+        }
+        sNxpService.MifareCLTRouteSet(seID, fullPower, lowPower, noPower);
+      } catch (RemoteException e) {
+        Log.e(TAG, "confMifareCLT failed", e);
+        attemptDeadServiceRecovery(e);
+        throw new IOException("confMifareCLT failed");
+      }
+    }
+    /**
+     * This api returns the CATEGORY_OTHER (non Payment)Services registered by
+     * the user along with the size of the registered aid group. This api has to
+     * be called when aid routing full intent is broadcast by the system.
      * <p>This gives the list of both static and dynamic card emulation services
      * registered by the user.
-     * <p> This api can be called to get the list of offhost and onhost cardemulation
-     * services registered by the user.
-     * <ul>
-     * <li>
-     * If the category is CATEGORY_PAYMENT than null value is returned.
-     * <li>
-     * If there are no non payment services null value is returned.
+     * <p> This api can be called to get the list of offhost and onhost
+     * cardemulation services registered by the user. <ul> <li> If the category
+     * is CATEGORY_PAYMENT than null value is returned. <li> If there are no non
+     * payment services null value is returned.
      * </ul>
      * @param UserID  The user id of current user
      * @param category The category i.e. CATEGORY_PAYMENT , CATEGORY_OTHER
@@ -350,10 +414,44 @@ public final class NxpNfcAdapter {
     }
 
     /**
-     * This api is called by applications to get the maximum routing table for AID registration
-     * The returned value doesn't provide the current remaining size available for AID.
-     * This value depends on the size available in NFCC and is constant.
-     * <p>Requires {@link android.Manifest.permission#NFC} permission.
+     * Set listen mode routing table configuration for Default Route.
+     * routeLoc is parameter which fetch the text from UI and compare
+     * * <p>Requires {@link android.Manifest.permission#NFC} permission.
+     * @throws IOException If a failure occurred during Default Route Route set.
+     */
+    public void DefaultRouteSet(String routeLoc, boolean fullPower,
+                                boolean lowPower, boolean noPower)
+        throws IOException {
+      try {
+        int seID = 0;
+        boolean result = false;
+        if (routeLoc.equals(NfcConstants.UICC_ID)) {
+          seID = NfcConstants.UICC_ID_TYPE;
+        } else if (routeLoc.equals(NfcConstants.UICC2_ID)) {
+          seID = NfcConstants.UICC2_ID_TYPE;
+        } else if (routeLoc.equals(NfcConstants.SMART_MX_ID)) {
+          seID = NfcConstants.SMART_MX_ID_TYPE;
+        } else if (routeLoc.equals(NfcConstants.HOST_ID)) {
+          seID = NfcConstants.HOST_ID_TYPE;
+        } else {
+          Log.e(TAG, "DefaultRouteSet: wrong default route ID");
+          throw new IOException(
+              "DefaultRouteSet failed: Wrong default route ID");
+        }
+        sNxpService.DefaultRouteSet(seID, fullPower, lowPower, noPower);
+      } catch (RemoteException e) {
+        Log.e(TAG, "confsetDefaultRoute failed", e);
+        attemptDeadServiceRecovery(e);
+        throw new IOException("confsetDefaultRoute failed");
+      }
+    }
+
+    /**
+     * This api is called by applications to get the maximum routing table for
+     * AID registration The returned value doesn't provide the current remaining
+     * size available for AID. This value depends on the size available in NFCC
+     * and is constant. <p>Requires {@link android.Manifest.permission#NFC}
+     * permission.
      * @return maximum routing table size for AID registration.
      * @throws  IOException if any exception occurs while retrieving the size.
      */
