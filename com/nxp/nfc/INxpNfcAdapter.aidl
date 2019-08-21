@@ -1,5 +1,5 @@
  /*
-  * Copyright (C) 2015 NXP Semiconductors
+  * Copyright (C) 2015-2019 NXP Semiconductors
   *
   * Licensed under the Apache License, Version 2.0 (the "License");
   * you may not use this file except in compliance with the License.
@@ -44,4 +44,6 @@ interface INxpNfcAdapter
     int getCommittedAidRoutingTableSize();
     int getSelectedUicc();
     int updateServiceState(int userId , in Map serviceState);
+    int setFieldDetectMode(boolean mode);
+    boolean isFieldDetectEnabled();
 }

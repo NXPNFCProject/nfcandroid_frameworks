@@ -2,7 +2,7 @@
 *
 *  The original Work has been changed by NXP Semiconductors.
 *
-*  Copyright (C) 2013-2014 NXP Semiconductors
+*  Copyright (C) 2013-2019 NXP Semiconductors
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -615,5 +615,56 @@ public final class NxpNfcAdapter {
             attemptDeadServiceRecovery(e);
             return 0xFF;
         }
+    }
+
+    /**
+     * This api is called by applications enable or disable field
+     * detect feauture.
+     * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
+     * <li>This api shall be called only Nfcservice is enabled.
+
+     * </ul>
+     * @param  Mode to Enable(true) and Disable(false)
+     * @return whether  the update of configuration is
+     *          success or not with reason.
+     *          0x01  - NFC_IS_OFF,
+     *          0x02  - NFC_BUSY_IN_MPOS
+     *          0x03  - ERROR_UNKNOWN
+     *          0x00  - SUCCESS
+     * @throws  IOException if any exception occurs during setting the NFC
+     configuration.
+     */
+    public int setFieldDetectMode(boolean mode) {
+      try {
+        return sNxpService.setFieldDetectMode(mode);
+      } catch (RemoteException e) {
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        return 0x03; /*ERROR_UNKNOWN*/
+      }
+    }
+
+    /**
+     * This api is called by applications to check whether field
+     * detect feature is enabled or not
+     * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
+     * <li>This api shall be called only Nfcservice is enabled.
+     * </ul>
+     * @param  None
+     * @return whether  the feature is enabled(true) disabled (false)
+     *          success or not.
+     *          Enabled  - true
+     *          Disabled - false
+     * @throws  IOException if any exception occurs during setting the NFC
+     * configuration.
+     */
+    public boolean isFieldDetectEnabled() {
+      try {
+        return sNxpService.isFieldDetectEnabled();
+      } catch (RemoteException e) {
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        return false;
+      }
     }
 }
