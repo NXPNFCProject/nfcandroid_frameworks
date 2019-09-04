@@ -119,7 +119,9 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
       } catch(Exception e) {
         Log.d(TAG, "Thread interruption exception received");
       }
-      mbIsConnected =  false;
+      synchronized (serviceMutex) {
+        mbIsConnected =  false;
+      }
       bindSEService();
       waitForConnection();
     }

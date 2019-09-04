@@ -599,18 +599,26 @@ public class SemsExecutor {
                                         rapduSelect.length);
             }
           }
+          // fall-through
           case SEMS_STATE_STORE_DATA: {
             /*
              * STEP 3 of executeScript - Sending SHA1 of Caller package
              */
             rapdu = sendSHA1OfCallerPackage(channelNumber,
                                             callerPackageName.getBytes());
+            if (rapdu == null) {
+              Log.e(TAG, "rapdu failed");
+              closeLogicalChannel(channelNumber);
+              updateSemsStatus(rapdu);
+              return sw6987;
+            }
             if (SemsUtil.getSW(rapdu) != (short)0x9000) {
               closeLogicalChannel(channelNumber);
               updateSemsStatus(rapdu);
               return Arrays.copyOfRange(rapdu, rapdu.length - 2, rapdu.length);
             }
           }
+          // fall-through
           case SEMS_STATE_CHECK_CERTIFICATE: {
             /*
              * STEP 4 of executeScript - Searching for Certificate in Script
@@ -621,6 +629,7 @@ public class SemsExecutor {
               return sw6987;
             }
           }
+          // fall-through
           case SEMS_STATE_VERIFY_SIGNATURE: {
             /*
              * STEP 5 of executeScript - Authentication frame command
@@ -629,6 +638,7 @@ public class SemsExecutor {
               return sw6987;
             }
           }
+          // fall-through
           case SEMS_STATE_SECURE_COMMAND_PROCESSING: {
             /*  STEP 6 of executeScript -Secure script commands*/
             status = SemsSecureCommandProcess(scriptTlvs);
@@ -696,6 +706,10 @@ public class SemsExecutor {
           byte[] secCmd = secureCommand.getValue();
 
           rapdu = sendProcessScript(channelNumber, secCmd);
+          if (rapdu == null) {
+            Log.e(TAG, "rapdu failed");
+            return stat;
+          }
           sw = SemsUtil.getSW(rapdu);
           if (sw == (short)0x6310) {
             /*
@@ -897,6 +911,12 @@ public class SemsExecutor {
     }
     if (stat == SemsStatus.SEMS_STATUS_SUCCESS && APCert != null) {
       rapdu = sendAPCertificate(channelNumber, APCert);
+      if (rapdu == null) {
+        Log.e(TAG, "rapdu failed");
+        closeLogicalChannel(channelNumber);
+        updateSemsStatus(rapdu);
+        return stat;
+      }
       if (SemsUtil.getSW(rapdu) != (short)0x9000) {
         Log.e(TAG, "certificate frame command failed");
         putIntoLog(rapdu, ErrorResponse);
@@ -971,6 +991,9 @@ public class SemsExecutor {
        */
       tlvs = SemsTLV.parse(SemsTLV.parse(rapduSelect).get(0).getValue());
       tlvRootEntityKeyID = SemsTLV.find(tlvs, 0x65);
+      if (tlvRootEntityKeyID == null) {
+        return SemsStatus.SEMS_STATUS_FAILED;
+      }
       tlvs = SemsTLV.parse(tlvRootEntityKeyID.getValue());
       tlvRE42 = SemsTLV.find(tlvs, 0x42);
       tlvRE45 = SemsTLV.find(tlvs, 0x45);
@@ -1008,6 +1031,10 @@ public class SemsExecutor {
     }
     authFrame = SemsTLV.parse(authFrame.getValue()).get(0);
     rapdu = sendAuthenticationFrame(channelNumber, authFrame.getValue());
+    if (rapdu == null) {
+      Log.e(TAG, "rapdu failed");
+      return stat;
+    }
     putIntoLog(rapdu, SemsAuthResponse);
 
     if (SemsUtil.getSW(rapdu) == (short)0x6310) { // begin_perso cleanup

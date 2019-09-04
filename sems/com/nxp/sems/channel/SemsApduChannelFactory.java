@@ -29,7 +29,6 @@ public class SemsApduChannelFactory {
 
   public static ISemsApduChannel getInstance(byte type, Context context,
           byte terminalID) throws SemsException{
-    if(mChannelFactory == null) {
       synchronized (SemsApduChannelFactory.class) {
         if(mChannelFactory == null) {
           Log.d(TAG, "SemsApduChannelFactory Initialization");
@@ -37,7 +36,6 @@ public class SemsApduChannelFactory {
                                  createApduChannel(type, context, terminalID);
         }
       }
-    }
     return mChannelFactory;
   }
 

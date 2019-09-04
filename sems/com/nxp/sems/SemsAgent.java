@@ -59,8 +59,8 @@ public final class SemsAgent {
     if (context == null) {
       throw new SemsException("Context information invalid/null");
     }
-    if (sInstance == null) {
-      synchronized (SemsAgent.class) { sInstance = new SemsAgent(); }
+    synchronized (SemsAgent.class) {
+      sInstance = new SemsAgent();
     }
     if (context != sContext) {
       sContext = context;
