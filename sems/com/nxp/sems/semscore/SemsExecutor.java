@@ -575,7 +575,7 @@ public class SemsExecutor {
 
       byte[] rapdu;
 
-      if (scriptTlvs.size() == 0) {
+      if ((scriptTlvs == null) || scriptTlvs.size() == 0) {
         putIntoLog(sw6987, ErrorResponse);
         updateSemsStatus(sw6987);
         Log.e(TAG, ">>>>>>>>>> Error : Script size 0 <<<<<<<<<<");
