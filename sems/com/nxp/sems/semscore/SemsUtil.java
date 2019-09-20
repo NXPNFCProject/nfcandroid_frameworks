@@ -65,9 +65,6 @@ public class SemsUtil {
   }
 
   public static byte[] parseHexString(String s) {
-    if (s == null) {
-      return null;
-    }
     try {
       ByteArrayOutputStream out = new ByteArrayOutputStream();
 

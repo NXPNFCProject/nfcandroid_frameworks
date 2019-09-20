@@ -571,7 +571,14 @@ public class SemsExecutor {
       /*To handle If input is given as path
       String script = readScriptFile(scriptIn);*/
       String script = scriptIn;
-      List<SemsTLV> scriptTlvs = SemsTLV.parse(SemsUtil.parseHexString(script));
+      byte[] data = SemsUtil.parseHexString(script);
+      if (data == null) {
+        putIntoLog(sw6987, ErrorResponse);
+        updateSemsStatus(sw6987);
+        Log.e(TAG, ">>>>>>>>>> parseHexString returned NULL <<<<<<<<<<");
+        return sw6987;
+      }
+      List<SemsTLV> scriptTlvs = SemsTLV.parse(data);
 
       byte[] rapdu;
 

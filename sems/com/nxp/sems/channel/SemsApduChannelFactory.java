@@ -35,8 +35,8 @@ public class SemsApduChannelFactory {
           mChannelFactory = (ISemsApduChannel) SemsApduChannelFactory.
                                  createApduChannel(type, context, terminalID);
         }
+        return mChannelFactory;
       }
-    return mChannelFactory;
   }
 
   private SemsApduChannelFactory() {}
