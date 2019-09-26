@@ -21,4 +21,8 @@ public interface ISemsCallback {
    * Invoked when SEMS script execution completes.
    */
   public void onSemsComplete(int status);
+
+  default void onSemsComplete(int status, String resp) {
+    return;
+  }
 }

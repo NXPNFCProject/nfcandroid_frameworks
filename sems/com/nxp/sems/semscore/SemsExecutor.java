@@ -1087,7 +1087,10 @@ public class SemsExecutor {
         }
       }
     }
-    if (this.mSemsCallback != null)
+    if (this.mSemsCallback != null) {
       this.mSemsCallback.onSemsComplete(updateStatus);
+      this.mSemsCallback.onSemsComplete(updateStatus, sRespOutlog);
+    }
+
   }
 }
