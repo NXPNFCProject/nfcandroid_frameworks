@@ -105,6 +105,8 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
   }
 
   private void bindSEService() {
+    connectionTimer = new Timer();
+    connectionTimer.schedule(mTimerTask, SERVICE_CONNECTION_TIME_OUT);
     BindToSEService bindService = new BindToSEService();
     bindService.start();
   }
@@ -114,14 +116,7 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
     waitForConnection();
     if(seService == null){
       Log.d(TAG, "SeService connection failed shall retry");
-      try{
-        new Thread().sleep(500);
-      } catch(Exception e) {
-        Log.d(TAG, "Thread interruption exception received");
-      }
-      mbIsConnected =  false;
-      bindSEService();
-      waitForConnection();
+      return;
     }
     Reader[] readers = seService.getReaders();
     if (readers.length > meSEIdx) {
@@ -226,10 +221,18 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
 
   class BindToSEService extends Thread {
     public void run() {
-      connectionTimer = new Timer();
-      connectionTimer.schedule(mTimerTask, SERVICE_CONNECTION_TIME_OUT);
-      seService = new SEService(sContext, mExecutor, mListener);
-      Log.d(TAG, "Bind to SE service");
+      int max_retry = 0;
+      while (seService == null && (max_retry++ < 3)) {
+        try {
+          new Thread().sleep(SERVICE_CONNECTION_TIME_OUT/6);
+          Log.d(TAG, "Bind to SE service fails" + max_retry);
+        } catch (Exception e) {
+          Log.d(TAG, "BindToSEService Thread interruption exception received");
+        }
+        seService = new SEService(sContext, mExecutor, mListener);
+      }
+      if(seService != null)
+        Log.d(TAG, "Bind to SE service Success");
     }
   }
 }
