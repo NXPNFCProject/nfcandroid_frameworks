@@ -46,4 +46,5 @@ interface INxpNfcAdapter
     int updateServiceState(int userId , in Map serviceState);
     int setFieldDetectMode(boolean mode);
     boolean isFieldDetectEnabled();
+    int changeRfParams(in byte[] data, boolean lastCMD);
 }

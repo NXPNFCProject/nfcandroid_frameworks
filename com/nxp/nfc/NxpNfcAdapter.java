@@ -573,6 +573,34 @@ public final class NxpNfcAdapter {
         }
     }
     /**
+     * This api is called by applications to update the NFCC RF configurations.
+     * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
+     * <li>This api shall be called only Nfcservice is enabled.
+     * <li>This api shall be called only when there are no NFC transactions ongoing
+     * </ul>
+     * @param  pkg package name of the caller
+     * @param  data NFC RF config to updated.
+     * @param  lastCMD Application send true which means last update of RF.
+     * @return whether  the update of configuration is
+     *          success or not.
+     *           0 - STATUS_SUCCESS
+     *          -1 - STATUS_FAILED
+     *          -2 - ERROR_STATUS_BUSY
+     *          -3 - ERROR_NFC_ON
+     *          -4 - ERROR_EMPTY_PAYLOAD
+     *          0xFF - Dead object
+     * @throws  IOException if any exception occurs during setting the NFC RF configuration.
+     */
+    public int changeRfParams(byte[] data, boolean lastCMD)  throws IOException {
+        try {
+            return sNxpService.changeRfParams(data, lastCMD);
+        } catch(RemoteException e) {
+            e.printStackTrace();
+            attemptDeadServiceRecovery(e);
+            return 0xFF;
+        }
+    }
+    /**
      * This api is called by applications to select the UICC slot. Selected Slot
      * will be activated for all type of CE from UICC.
      * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
