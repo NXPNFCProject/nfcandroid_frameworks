@@ -588,6 +588,7 @@ public final class NxpNfcAdapter {
      *          -2 - ERROR_STATUS_BUSY
      *          -3 - ERROR_NFC_ON
      *          -4 - ERROR_EMPTY_PAYLOAD
+     *          -5 - ERROR_INVALID_LENGTH
      *          0xFF - Dead object
      * @throws  IOException if any exception occurs during setting the NFC RF configuration.
      */
