@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2015 NXP Semiconductors
+* Copyright (C) 2015,2019 NXP Semiconductors
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ public final class NfcApduServiceInfo extends ApduServiceInfo implements Parcela
     //index of secure element
     public static final int SECURE_ELEMENT_ROUTE_ESE = 1;
     public static final int SECURE_ELEMENT_ROUTE_UICC = 2;
-    public static final int SECURE_ELEMENT_ROUTE_UICC2 = 0x4;
+    public static final int SECURE_ELEMENT_ROUTE_UICC2 = 3;
 
     //power state value
     static final int POWER_STATE_SWITCH_ON = 1;
