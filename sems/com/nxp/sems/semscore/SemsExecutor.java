@@ -34,6 +34,7 @@ import com.nxp.sems.SemsUtil;
 import com.nxp.sems.channel.ISemsApduChannel;
 import com.nxp.sems.ISemsCallback;
 import com.nxp.sems.SemsStatus;
+import com.nxp.sems.SemsGetLastExecStatus;
 import android.content.Context;
 
 public class SemsExecutor {
@@ -1125,6 +1126,75 @@ public class SemsExecutor {
       this.mSemsCallback.onSemsComplete(updateStatus);
       this.mSemsCallback.onSemsComplete(updateStatus, sRespOutlog);
     }
+  }
+  /**
+   * Retrieve the last SEMS execution status by sending GET DATA command
+   * to SEMS applet
+   * <br/>
+   * @return {@code SemsGetLastExecStatus object}
+   *      outScriptSignature : SEMS lib will provide the Authentication frame
+   *             signature of the last executed script. Application can use this
+   *             info to match with local SEMS script, useful in multiple application
+   *             context.
+   *      status:
+   *      0x00 - Success, The input script has been completely executed
+   *      0x01 - Failed, The input script execution was interrupted
+   *             because of teardown
+   */
+  SemsGetLastExecStatus getLastSemsExecuteStatus() throws Exception {
+    final byte GET_SEMS_STATUS = 0x46;
+    final byte GET_AUTH_SIGNATURE = 0x47;
+    byte channelNumber = 0;
+    List<SemsTLV> tlvs;
+    SemsTLV tlvSC46 , tlvSC47;
+    byte[] rapdu;
 
+    SemsGetLastExecStatus lastSemsExec = new SemsGetLastExecStatus();
+    lastSemsExec.status = SemsAgent.SEMS_STATUS_FAILED;
+    lastSemsExec.outScriptSignature = null;
+
+    /* Frame packet to get status and authentication */
+    byte[] getDataFrame = {(byte)0x80, (byte)0xCA, (byte)0x00, (byte)0x00, (byte)0x00};
+
+    try {
+        if (SelectSems() != SemsStatus.SEMS_STATUS_SUCCESS) {
+          return lastSemsExec;
+        }
+
+        /******** Processing Authentication command ***********/
+        getDataFrame[3] = GET_AUTH_SIGNATURE;
+        rapdu = sChannel.transmit(getDataFrame);
+        if((rapdu.length != 0) && SemsUtil.getSW(rapdu) == (short)0x9000) {
+          tlvs = SemsTLV.parse(rapdu);
+          if(tlvs.size() != 0) {
+            tlvSC47 = SemsTLV.find(tlvs, GET_AUTH_SIGNATURE);
+            if(tlvSC47 != null)
+              lastSemsExec.outScriptSignature = Arrays.toString(tlvSC47.getValue());
+          }
+        }
+
+        /******** Processing Status command ***********/
+        getDataFrame[3] = GET_SEMS_STATUS;
+        rapdu = sChannel.transmit(getDataFrame);
+        if((rapdu.length != 0) && SemsUtil.getSW(rapdu) == (short)0x9000) {
+          tlvs = SemsTLV.parse(rapdu);
+          if(tlvs.size() != 0) {
+            int statusByte = 0;
+            tlvSC46 = SemsTLV.find(tlvs, GET_SEMS_STATUS);
+            if((tlvSC46 != null) && (tlvSC46.getValue()[statusByte] == SemsAgent.SEMS_STATUS_SUCCESS)) {
+              lastSemsExec.status = SemsAgent.SEMS_STATUS_SUCCESS;
+            }
+          }
+        }
+
+        Log.d(TAG, "******* Sems authentication signature : " + lastSemsExec.outScriptSignature);
+        Log.d(TAG, "******* Sems status : " + lastSemsExec.status);
+
+        /*Close the logical chanel*/
+        closeLogicalChannel(channelNumber);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return lastSemsExec;
   }
 }

@@ -39,7 +39,7 @@ public final class SemsAgent {
   public static final byte SEMS_STATUS_DENIED = 0x03;
   public static final byte SEMS_STATUS_UNKNOWN = 0x0F;
   public static final short major = 0;
-  public static final short minor = 7;
+  public static final short minor = 8;
 
   private static SemsAgent sInstance;
   private static Context sContext = null;
@@ -115,6 +115,30 @@ public final class SemsAgent {
       return mExecutor.getSemsOutputResponse(outputFilename);
     } catch (Exception e) {
       throw new SemsException("Unable to fetch Sems response");
+    }
+  }
+  /**
+   * Retrieve the last SEMS execution status by sending GET DATA command
+   * to SEMS applet
+   * <br/>
+   * @return {@code SemsGetLastExecStatus object}
+   *      outScriptSignature : SEMS lib will provide the Authentication frame
+   *             signature of the last executed script. Application can use this
+   *             info to match with local SEMS script, useful in multiple application
+   *             context.
+   *      status:
+   *      0x00 - Success, The input script has been completely executed
+   *      0x01 - Failed, The input script execution was interrupted
+   *             because of teardown
+   */
+  public SemsGetLastExecStatus GetLastSemsExecuteStatus() throws SemsException {
+    try {
+      mSemsApduChannel = SemsApduChannelFactory.getInstance(
+           SemsApduChannelFactory.OMAPI_CHANNEL, sContext, sTerminalID);
+      mExecutor = SemsExecutor.getInstance(mSemsApduChannel, sContext);
+      return mExecutor.getLastSemsExecuteStatus();
+    } catch (Exception e) {
+      throw new SemsException("Unable to get last sems execute status");
     }
   }
 }
