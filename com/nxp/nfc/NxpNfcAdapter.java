@@ -674,6 +674,7 @@ public final class NxpNfcAdapter {
      *          0x02  - NFC_BUSY_IN_MPOS
      *          0x03  - ERROR_UNKNOWN
      *          0x00  - SUCCESS
+     * @throws  IOException if any exception occurs during set field detect mode.
      */
     public int setFieldDetectMode(boolean mode) {
       try {
@@ -696,6 +697,7 @@ public final class NxpNfcAdapter {
      *          success or not.
      *          Enabled  - true
      *          Disabled - false
+     * @throws  IOException if any exception occurs during Field Detect Enable.
      */
     public boolean isFieldDetectEnabled() {
       try {
@@ -756,7 +758,7 @@ public final class NxpNfcAdapter {
      * @param data data bytes to be written
      * @param length current data length
      * @return number of bytes written if success else negative number of
-     *               error code listed as here .
+     *           error code listed as here .
      *          -1  STATUS_FAILED
      *          -2  ERROR_RF_ACTIVATED
      *          -3  ERROR_MPOS_ON
