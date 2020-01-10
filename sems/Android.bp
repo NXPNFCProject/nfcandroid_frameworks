@@ -5,6 +5,7 @@ java_library {
 
     name: "com.nxp.sems",
     installable: true,
+    sdk_version: "29",
     vendor: true,
     required: ["com.nxp.sems.xml"],
 
