@@ -1193,6 +1193,7 @@ public class SemsExecutor {
         /*Close the logical chanel*/
         closeLogicalChannel(channelNumber);
     } catch (IOException e) {
+      closeLogicalChannel(channelNumber);
       e.printStackTrace();
     }
     return lastSemsExec;
