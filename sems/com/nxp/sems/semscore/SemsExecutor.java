@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NXP
+ * Copyright 2019-2020 NXP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -716,7 +716,9 @@ public class SemsExecutor {
           rapdu = sendProcessScript(channelNumber, secCmd);
           if (rapdu == null) {
             Log.e(TAG, "sendProcessScript received incorrect rapdu");
-            return stat;
+            putIntoLog(sw6987, ErrorResponse);
+            rapdu = sw6987;
+            break;
           }
           sw = SemsUtil.getSW(rapdu);
           if (sw == (short)0x6310) {
@@ -808,7 +810,12 @@ public class SemsExecutor {
 
         /* Re-select the LS Application. (FIXME: may be removed because
          * there may be an issue in the LS Applet)*/
-        selectApplication(channelNumber, AID_MEM);
+        rapdu = selectApplication(channelNumber, AID_MEM);
+        if(rapdu == null) {
+          putIntoLog(sw6987, ErrorResponse);
+          rapdu = sw6987;
+          break;
+        }
         mState = SEMS_STATE_STORE_DATA;
         break;
       }
@@ -1041,6 +1048,9 @@ public class SemsExecutor {
     rapdu = sendAuthenticationFrame(channelNumber, authFrame.getValue());
     if (rapdu == null) {
       Log.e(TAG, "sendAuthenticationFrame received incorrect rapdu");
+      closeLogicalChannel(channelNumber);
+      putIntoLog(sw6987, ErrorResponse);
+      updateSemsStatus(sw6987);
       return stat;
     }
     putIntoLog(rapdu, SemsAuthResponse);
