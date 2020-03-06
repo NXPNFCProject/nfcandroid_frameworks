@@ -182,6 +182,40 @@ public final class NxpNfcAdapter {
         throw new IOException("confMifareCLT failed");
       }
     }
+
+     /**
+      * Set listen mode routing table configuration for NfcFRouteSet.
+      * routeLoc is parameter which fetch the text from UI and compare
+      * <p>Requires {@link android.Manifest.permission#NFC} permission.
+      *
+      * @throws IOException If a failure occurred during Felica Techno Route set.
+      */
+     public void NfcFRouteSet(String routeLoc, boolean fullPower,
+                                   boolean lowPower, boolean noPower)
+         throws IOException {
+       try {
+         int seID = 0;
+         boolean result = false;
+         if (routeLoc.equals(NfcConstants.UICC_ID)) {
+           seID = NfcConstants.UICC_ID_TYPE;
+         } else if (routeLoc.equals(NfcConstants.UICC2_ID)) {
+           seID = NfcConstants.UICC2_ID_TYPE;
+         } else if (routeLoc.equals(NfcConstants.SMART_MX_ID)) {
+           seID = NfcConstants.SMART_MX_ID_TYPE;
+         } else if (routeLoc.equals(NfcConstants.HOST_ID)) {
+           seID = NfcConstants.HOST_ID_TYPE;
+         } else {
+           Log.e(TAG, "confNfcF: wrong default route ID");
+           throw new IOException("confNfcF failed: Wrong default route ID");
+         }
+         sNxpService.NfcFRouteSet(seID, fullPower, lowPower, noPower);
+       } catch (RemoteException e) {
+         Log.e(TAG, "confNfcF failed", e);
+         attemptDeadServiceRecovery(e);
+         throw new IOException("confNfcF failed");
+       }
+     }
+
     /**
      * This api returns the CATEGORY_OTHER (non Payment)Services registered by
      * the user along with the size of the registered aid group. This api has to
