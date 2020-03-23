@@ -5,6 +5,7 @@ java_library {
 
     name: "com.nxp.ls",
     installable: true,
+    sdk_version: "29",
     vendor: true,
     required: ["com.nxp.ls.xml"],
 
