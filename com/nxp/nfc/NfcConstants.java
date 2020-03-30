@@ -2,7 +2,7 @@
 *
 *  The original Work has been changed by NXP Semiconductors.
 *
-*  Copyright (C) 2013-2019 NXP Semiconductors
+*  Copyright (C) 2013-2020 NXP Semiconductors
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -99,6 +99,17 @@ public final class NfcConstants {
   public static final int MPOS_STATUS_REJECTED = 0x01;
 
   /**
+   * SCR mode status
+   */
+  public static final int SCR_STATUS_SUCCESS = 0x00;
+
+  public static final int SCR_STATUS_BUSY = 0xEB;
+
+  public static final int SCR_STATUS_REJECTED = 0x01;
+
+  public static final int SCR_STATUS_FAILED = 0x03;
+
+  /**
    * parameter for configuring RF poll
    */
   public static final int LOW_POWER = 0x00;
@@ -164,28 +175,41 @@ public final class NfcConstants {
   public static final String EXTRA_SOURCE = "com.nxp.extra.SOURCE";
 
   /**
-   * Intent received when the SWP Reader is Requested by Application
+   * Intent received when start reader request from app is successfully
+   * processed.
    *
    */
   @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
   public static final String ACTION_NFC_MPOS_READER_MODE_START_SUCCESS =
       "com.nxp.nfc_extras.action.NFC_MPOS_READER_MODE_START_SUCCESS";
 
+  @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
+  public static final String ACTION_NFC_SECURE_READER_MODE_START_SUCCESS =
+      "com.nxp.nfc_extras.action.NFC_SECURE_READER_MODE_START_SUCCESS";
+
   /**
-   * Intent received when the SWP Reader is Requested by Application
+   * Intent received when start reader request from app is failed to process.
    *
    */
   @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
   public static final String ACTION_NFC_MPOS_READER_MODE_START_FAIL =
       "com.nxp.nfc_extras.action.NFC_MPOS_READER_MODE_START_FAIL";
 
+  @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
+  public static final String ACTION_NFC_SECURE_READER_MODE_START_FAIL =
+      "com.nxp.nfc_extras.action.NFC_SECURE_READER_MODE_START_FAIL";
+
   /**
-   * Intent received when the SWP Reader needs to restart.
+   * Intent received when the Secure Reader needs to restart.
    *
    */
   @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
   public static final String ACTION_NFC_MPOS_READER_MODE_RESTART =
       "com.nxp.nfc_extras.action.NFC_MPOS_READER_MODE_RESTART";
+
+  @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
+  public static final String ACTION_NFC_SECURE_READER_MODE_RESTART =
+      "com.nxp.nfc_extras.action.NFC_SECURE_READER_MODE_RESTART";
 
   /**
    * Intent received when reader is activated.
@@ -195,24 +219,36 @@ public final class NfcConstants {
   public static final String ACTION_NFC_MPOS_READER_MODE_ACTIVATED =
       "com.nxp.nfc_extras.action.NFC_MPOS_READER_MODE_ACTIVATED";
 
+  @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
+  public static final String ACTION_NFC_SECURE_READER_MODE_TARGET_ACTIVATED =
+      "com.nxp.nfc_extras.action.NFC_SECURE_READER_MODE_TARGET_ACTIVATED";
+
   /**
-   * Intent received when the SWP Reader is disconnected from card.
+   * Intent received when the Secure Reader is disconnected from card.
    *
    */
   @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
   public static final String ACTION_NFC_MPOS_READER_MODE_STOP_SUCCESS =
       "com.nxp.nfc_extras.action.NFC_MPOS_READER_MODE_STOP_SUCCESS";
 
+  @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
+  public static final String ACTION_NFC_SECURE_READER_MODE_STOP_SUCCESS =
+      "com.nxp.nfc_extras.action.NFC_SECURE_READER_MODE_STOP_SUCCESS";
+
   /**
-   * Intent received when the SWP Reader is disconnected from card.
+   * Intent received when the Secure Reader is disconnected from card.
    *
    */
   @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
   public static final String ACTION_NFC_MPOS_READER_MODE_STOP_FAIL =
       "com.nxp.nfc_extras.action.NFC_MPOS_READER_MODE_STOP_FAIL";
 
+  @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
+  public static final String ACTION_NFC_SECURE_READER_MODE_STOP_FAIL =
+      "com.nxp.nfc_extras.action.NFC_SECURE_READER_MODE_STOP_FAIL";
+
   /**
-   * Intent received when the SWP Reader transcation is done.
+   * Intent received when the Secure Reader transcation is done.
    *
    */
   @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
@@ -220,15 +256,19 @@ public final class NfcConstants {
       "com.nxp.nfc_extras.action.NFC_MPOS_READER_MODE_REMOVE_CARD";
 
   /**
-   * Intent received when the SWP Reader gets timeout.
+   * Intent received when the Secure Reader gets timeout.
    *
    */
   @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
   public static final String ACTION_NFC_MPOS_READER_MODE_TIMEOUT =
       "com.nxp.nfc_extras.action.NFC_MPOS_READER_MODE_TIMEOUT";
 
+  @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
+  public static final String ACTION_NFC_SECURE_READER_MODE_TIMEOUT =
+      "com.nxp.nfc_extras.action.NFC_SECURE_READER_MODE_TIMEOUT";
+
   /**
-   * Intent received when multiple cards detected during SWP reader operation.
+   * Intent received when multiple cards detected during Secure reader operation.
    *
    */
   @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)

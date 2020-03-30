@@ -2,7 +2,7 @@
  *
  *  The original Work has been changed by NXP Semiconductors.
  *
- *  Copyright (C) 2013-2019 NXP Semiconductors
+ *  Copyright (C) 2013-2020 NXP Semiconductors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import android.os.ServiceManager;
 import java.io.IOException;
 import android.os.UserHandle;
 import android.os.RemoteException;
+import android.annotation.RequiresPermission;
 
 import android.util.Log;
 import java.util.List;
@@ -308,15 +309,17 @@ public final class NxpNfcAdapter {
      *          MPOS_STATUS_SUCCESS
      * @throws IOException If a failure occurred during reader mode set or reset
      */
-    public int mPOSSetReaderMode (String pkg, boolean on) throws IOException {
-        try {
-            return sNxpService.mPOSSetReaderMode(pkg, on);
-        } catch(RemoteException e) {
-            Log.e(TAG, "RemoteException in mPOSSetReaderMode (int state): ", e);
-            e.printStackTrace();
-            attemptDeadServiceRecovery(e);
-            throw new IOException("RemoteException in mPOSSetReaderMode (int state)");
-        }
+    @RequiresPermission(android.Manifest.permission.NFC)
+    public int mPOSSetReaderMode(String pkg, boolean on) throws IOException {
+      try {
+        return sNxpService.mPOSSetReaderMode(pkg, on);
+      } catch (RemoteException e) {
+        Log.e(TAG, "RemoteException in mPOSSetReaderMode (int state): ", e);
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        throw new IOException(
+            "RemoteException in mPOSSetReaderMode (int state)");
+      }
     }
 
     /**
@@ -330,15 +333,47 @@ public final class NxpNfcAdapter {
      *          FALSE if reader mode is not started
      * @throws IOException If a failure occurred during reader mode set or reset
      */
-    public boolean mPOSGetReaderMode (String pkg) throws IOException {
-        try {
-            return sNxpService.mPOSGetReaderMode(pkg);
-        } catch(RemoteException e) {
-            Log.e(TAG, "RemoteException in mPOSGetReaderMode (): ", e);
-            e.printStackTrace();
-            attemptDeadServiceRecovery(e);
-            throw new IOException("RemoteException in mPOSSetReaderMode ()");
-        }
+    @RequiresPermission(android.Manifest.permission.NFC)
+    public boolean mPOSGetReaderMode(String pkg) throws IOException {
+      try {
+        return sNxpService.mPOSGetReaderMode(pkg);
+      } catch (RemoteException e) {
+        Log.e(TAG, "RemoteException in mPOSGetReaderMode (): ", e);
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        throw new IOException("RemoteException in mPOSGetReaderMode ()");
+      }
+    }
+
+    /**
+     * This is the first API to be called to configure the SCR mode
+     * <p>Requires {@link android.Manifest.permission#NFC} permission.
+     * <li>This api shall be called only Nfcservice is enabled.
+     * <li>This api shall be called only when there are no NFC transactions
+     * ongoing
+     * </ul>
+     * @param  on Sets/Resets the Secure Reader state.
+     * @param  Requested reader type. e.g. Mifare Classic Reader("MFC")
+     * @return whether the update of state is
+     *          success or busy or fail or rejected.
+     *          SCR_STATUS_BUSY
+     *          SCR_STATUS_REJECTED
+     *          SCR_STATUS_SUCCESS
+     *          SCR_STATUS_FAILED
+     * @throws IOException If a failure occurred during reader mode set or reset
+     */
+    @RequiresPermission(android.Manifest.permission.NFC)
+    public int configureSecureReader(boolean on, String readerType)
+        throws IOException {
+      try {
+        return sNxpService.configureSecureReader(on, readerType);
+      } catch (RemoteException e) {
+        Log.e(TAG, "RemoteException in configureSecureReader (int state): ", e);
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        throw new IOException(
+            "RemoteException in configureSecureReader (int state)");
+      }
     }
 
     /**
