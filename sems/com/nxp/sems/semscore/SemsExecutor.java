@@ -603,6 +603,8 @@ public class SemsExecutor {
           case SEMS_STATE_SELECT: {
             status = SelectSems();
             if (status != SemsStatus.SEMS_STATUS_SUCCESS) {
+              closeLogicalChannel(channelNumber);
+              updateSemsStatus(sw6987);
               return Arrays.copyOfRange(rapduSelect, rapduSelect.length - 2,
                                         rapduSelect.length);
             }
@@ -967,20 +969,31 @@ public class SemsExecutor {
     SemsStatus stat = SemsStatus.SEMS_STATUS_FAILED;
     Log.d(TAG, "Select SEMS Application");
     rapduSelect = selectApplication(channelNumber, AID_MEM);
+    if (rapduSelect == null) {
+      Log.e(TAG, "SEMS-select failed");
+      return stat;
+    }
     if (SemsUtil.getSW(rapduSelect) != (short)0x9000) {
       if ((SemsUtil.getSW(rapduSelect) == (short)0x6999) ||
           (SemsUtil.getSW(rapduSelect) == (short)0x6A82)) {
         rapduSelect = selectApplication(channelNumber, SEMS_APP_AID);
+        if (rapduSelect == null) {
+          Log.e(TAG, "SEMS-select failed");
+          return stat;
+        }
         if ((SemsUtil.getSW(rapduSelect) == (short)0x6999) ||
             (SemsUtil.getSW(rapduSelect) == (short)0x6A82)) {
           rapduSelect = selectApplication(channelNumber, SEMS_UPD_APP_AID);
+          if (rapduSelect == null) {
+            Log.e(TAG, "SEMS-select failed");
+            return stat;
+          }
           if (SemsUtil.getSW(rapduSelect) == (short)0x9000) {
             AID_MEM = SEMS_UPD_APP_AID;
             stat = SemsStatus.SEMS_STATUS_SUCCESS;
           } else {
             Log.e(TAG, "SEMS/SEMS-updater not found");
-            closeLogicalChannel(channelNumber);
-            updateSemsStatus(rapduSelect);
+            return stat;
           }
         } else {
           if (SemsUtil.getSW(rapduSelect) == (short)0x9000) {
@@ -988,14 +1001,12 @@ public class SemsExecutor {
             stat = SemsStatus.SEMS_STATUS_SUCCESS;
           } else {
             Log.e(TAG, "SEMS/SEMS-updater not found");
-            closeLogicalChannel(channelNumber);
-            updateSemsStatus(rapduSelect);
+            return stat;
           }
         }
       } else {
         Log.e(TAG, "SEMS/SEMS-updater select failed");
-        closeLogicalChannel(channelNumber);
-        updateSemsStatus(rapduSelect);
+        return stat;
       }
     } else {
       stat = SemsStatus.SEMS_STATUS_SUCCESS;
