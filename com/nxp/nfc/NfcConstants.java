@@ -200,7 +200,7 @@ public final class NfcConstants {
       "com.nxp.nfc_extras.action.NFC_SECURE_READER_MODE_START_FAIL";
 
   /**
-   * Intent received when the secure Reader needs to restart.
+   * Intent received when the Secure Reader needs to restart.
    *
    */
   @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)

@@ -344,15 +344,16 @@ public final class NxpNfcAdapter {
      * @throws IOException If a failure occurred during reader mode set or reset
      */
     @RequiresPermission(android.Manifest.permission.NFC)
-    public int mPOSSetReaderMode (String pkg, boolean on) throws IOException {
-        try {
-            return sNxpService.mPOSSetReaderMode(pkg, on);
-        } catch(RemoteException e) {
-            Log.e(TAG, "RemoteException in mPOSSetReaderMode (int state): ", e);
-            e.printStackTrace();
-            attemptDeadServiceRecovery(e);
-            throw new IOException("RemoteException in mPOSSetReaderMode (int state)");
-        }
+    public int mPOSSetReaderMode(String pkg, boolean on) throws IOException {
+      try {
+        return sNxpService.mPOSSetReaderMode(pkg, on);
+      } catch (RemoteException e) {
+        Log.e(TAG, "RemoteException in mPOSSetReaderMode (int state): ", e);
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        throw new IOException(
+            "RemoteException in mPOSSetReaderMode (int state)");
+      }
     }
 
     /**
@@ -367,15 +368,15 @@ public final class NxpNfcAdapter {
      * @throws IOException If a failure occurred during reader mode set or reset
      */
     @RequiresPermission(android.Manifest.permission.NFC)
-    public boolean mPOSGetReaderMode (String pkg) throws IOException {
-        try {
-            return sNxpService.mPOSGetReaderMode(pkg);
-        } catch(RemoteException e) {
-            Log.e(TAG, "RemoteException in mPOSGetReaderMode (): ", e);
-            e.printStackTrace();
-            attemptDeadServiceRecovery(e);
-            throw new IOException("RemoteException in mPOSSetReaderMode ()");
-        }
+    public boolean mPOSGetReaderMode(String pkg) throws IOException {
+      try {
+        return sNxpService.mPOSGetReaderMode(pkg);
+      } catch (RemoteException e) {
+        Log.e(TAG, "RemoteException in mPOSGetReaderMode (): ", e);
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        throw new IOException("RemoteException in mPOSGetReaderMode ()");
+      }
     }
 
     /**
@@ -398,15 +399,15 @@ public final class NxpNfcAdapter {
     @RequiresPermission(android.Manifest.permission.NFC)
     public int configureSecureReader(boolean on, String readerType)
         throws IOException {
-        try {
-            return sNxpService.configureSecureReader(on, readerType);
-        } catch (RemoteException e) {
-            Log.e(TAG, "RemoteException in configureSecureReader (int state): ", e);
-            e.printStackTrace();
-            attemptDeadServiceRecovery(e);
-            throw new IOException(
-              "RemoteException in configureSecureReader (int state)");
-        }
+      try {
+        return sNxpService.configureSecureReader(on, readerType);
+      } catch (RemoteException e) {
+        Log.e(TAG, "RemoteException in configureSecureReader (int state): ", e);
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        throw new IOException(
+            "RemoteException in configureSecureReader (int state)");
+      }
     }
 
     /**
@@ -696,10 +697,11 @@ public final class NxpNfcAdapter {
       }
     }
     /**
-     * This api is called by applications to enable or disable field
+     * This api is called by applications enable or disable field
      * detect feauture.
      * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
-     * <li>This api shall be called only if Nfcservice is enabled.
+     * <li>This api shall be called only Nfcservice is enabled.
+
      * </ul>
      * @param  Mode to Enable(true) and Disable(false)
      * @return whether  the update of configuration is
@@ -708,7 +710,7 @@ public final class NxpNfcAdapter {
      *          0x02  - NFC_BUSY_IN_MPOS
      *          0x03  - ERROR_UNKNOWN
      *          0x00  - SUCCESS
-     * @throws  IOException if any exception occurs during set field detect mode.
+     * @throws  IOException if any exception occurs during setting the NFC configuration.
      */
     public int setFieldDetectMode(boolean mode) {
       try {
@@ -724,14 +726,15 @@ public final class NxpNfcAdapter {
      * This api is called by applications to check whether field
      * detect feature is enabled or not
      * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
-     * <li>This api shall be called only if Nfcservice is enabled.
+     * <li>This api shall be called only Nfcservice is enabled.
+
      * </ul>
      * @param  None
      * @return whether  the feature is enabled(true) disabled (false)
      *          success or not.
      *          Enabled  - true
      *          Disabled - false
-     * @throws  IOException if any exception occurs during Field Detect Enable.
+     * @throws  IOException if any exception occurs during setting the NFC configuration.
      */
     public boolean isFieldDetectEnabled() {
       try {
@@ -746,14 +749,15 @@ public final class NxpNfcAdapter {
     /**
      * This api is called by applications to Activate Secure Element Interface.
      * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
-     * <li>This api shall be called only if Nfcservice is enabled.
+     * <li>This api shall be called only Nfcservice is enabled.
      * </ul>
      * @return whether  the update of configuration is
      *          success or not.
      *          0x03 - failure
      *          0x00 - success
      *          0xFF - Service Unavialable
-     * @throws  IOException if any exception occurs during activate SE Interface.
+     * @throws  IOException if any exception occurs during setting the NFC
+     * configuration.
      */
     public int activateSeInterface() throws IOException {
       try {
@@ -767,14 +771,15 @@ public final class NxpNfcAdapter {
     /**
      * This api is called by applications to Deactivate Secure Element Interface.
      * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
-     * <li>This api shall be called only if Nfcservice is enabled.
+     * <li>This api shall be called only Nfcservice is enabled.
      * </ul>
      * @return whether  the update of configuration is
      *          success or not.
      *          0x03 - failure
      *          0x00 - success
      *          0xFF - Service Unavialable
-     * @throws  IOException if any exception occurs during de-activate SE Interface.
+     * @throws  IOException if any exception occurs during setting the NFC
+     * configuration.
      */
     public int deactivateSeInterface() throws IOException {
       try {
@@ -792,16 +797,16 @@ public final class NxpNfcAdapter {
      * @param data data bytes to be written
      * @param length current data length
      * @return number of bytes written if success else negative number of
-     *           error code listed as here .
-     *          -1  STATUS_FAILED
-     *          -2  ERROR_RF_ACTIVATED
-     *          -3  ERROR_MPOS_ON
-     *          -4  ERROR_NFC_NOT_ON
-     *          -5  ERROR_INVALID_FILE_ID
-     *          -6  ERROR_INVALID_LENGTH
-     *          -7  ERROR_CONNECTION_FAILED
-     *          -8  ERROR_EMPTY_PAYLOAD
-     *          -9  ERROR_NDEF_VALIDATION_FAILED
+                error code listed as here .
+                -1  STATUS_FAILED
+                -2  ERROR_RF_ACTIVATED
+                -3  ERROR_MPOS_ON
+                -4  ERROR_NFC_NOT_ON
+                -5  ERROR_INVALID_FILE_ID
+                -6  ERROR_INVALID_LENGTH
+                -7  ERROR_CONNECTION_FAILED
+                -8  ERROR_EMPTY_PAYLOAD
+                -9  ERROR_NDEF_VALIDATION_FAILED
      * <p>Requires {@link   android.Manifest.permission#NFC} permission.
      */
     public int doWriteT4tData(byte[] fileId, byte[] data, int length) {
