@@ -1,5 +1,5 @@
  /*
-  * Copyright (C) 2015-2019 NXP Semiconductors
+  * Copyright (C) 2015-2020 NXP Semiconductors
   *
   * Licensed under the Apache License, Version 2.0 (the "License");
   * you may not use this file except in compliance with the License.
@@ -50,4 +50,5 @@ interface INxpNfcAdapter
     int doWriteT4tData(in byte[] fileId, in byte[] data, int length);
     byte[] doReadT4tData(in byte[] fileId);
     int nfcSelfTest(int type);
+    int configureSecureReader(boolean on, String readerType);
 }
