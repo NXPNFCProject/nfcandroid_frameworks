@@ -30,6 +30,7 @@ import com.nxp.sems.SemsException;
 import com.nxp.sems.SemsExecutor;
 import com.nxp.sems.ISemsCallback;
 import com.nxp.sems.SemsStatus;
+import com.nxp.sems.SemsExecutionStatus;
 
 public final class SemsAgent {
   public static final String TAG = "SEMS-SemsAgent";
@@ -46,6 +47,7 @@ public final class SemsAgent {
   private static byte sTerminalID = 0;
   private ISemsApduChannel mSemsApduChannel = null;
   private SemsExecutor mExecutor = null;
+  public static Object semsObj = new Object();
 
   /**
    * Returns SemsAgent singleton object
@@ -94,6 +96,39 @@ public final class SemsAgent {
         mExecutor.executeScript(inputScriptBuffer, outputFilename, callback);
     if (status == SemsStatus.SEMS_STATUS_SUCCESS) {
       return SEMS_STATUS_SUCCESS;
+    } else {
+      return SEMS_STATUS_FAILED;
+    }
+  }
+
+  /**
+   * Perform secure SEMS script execution synchronously
+   * <br/>
+   * inputScript : The Input secure script buffer in string format,
+   * fileName : Output response storage file name
+   * @param void
+   *
+   * @return {@code status} 0 in SUCCESS, otherwise
+   *                        1 in SEMS status Failed
+   *                        2 in SEMS status Busy
+   *                        3 in SEMS status denied
+   *                     0x0f in Unknown error.
+   */
+  public int SemsExecuteScript(String inputScriptBuffer, String outputFilename)
+      throws SemsException {
+    SemsExecutionStatus.mSemsExecutionStatus = SEMS_STATUS_FAILED;
+    int status = SemsExecuteScript(inputScriptBuffer, outputFilename,
+                                   new SemsExecutionStatus());
+    if (status == SEMS_STATUS_SUCCESS) {
+      synchronized (semsObj) {
+        try {
+          semsObj.wait();
+        } catch (InterruptedException e) {
+          throw new SemsException("Wait on SEMS script Execution failed");
+        }
+      }
+
+      return SemsExecutionStatus.mSemsExecutionStatus;
     } else {
       return SEMS_STATUS_FAILED;
     }
