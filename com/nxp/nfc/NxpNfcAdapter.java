@@ -30,6 +30,7 @@ import android.os.ServiceManager;
 import java.io.IOException;
 import android.os.UserHandle;
 import android.os.RemoteException;
+import android.annotation.SystemApi;
 import android.annotation.RequiresPermission;
 
 import android.util.Log;
@@ -834,6 +835,52 @@ public final class NxpNfcAdapter {
         e.printStackTrace();
         attemptDeadServiceRecovery(e);
         return null;
+      }
+    }
+
+    /**
+     * This api is called by applications to Enable Wireless charging.
+     * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
+     * <li>This api shall be called only after Nfcservice is enabled.
+     * </ul>
+     * @return whether  the update of configuration is
+     *          success or not.
+     *          0x03 - failure
+     *          0x00 - success
+     *          0xFF - Service Unavailable
+     * @throws  IOException if any exception occurs during this operation
+     */
+    @SystemApi
+    public int enableWlc() throws IOException {
+      try {
+        return sNxpService.enableWlc();
+      } catch (RemoteException e) {
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        return 0xFF;
+      }
+    }
+
+    /**
+     * This api is called by applications to Disable Wireless charging.
+     * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
+     * <li>This api shall be called only after Nfcservice is enabled.
+     * </ul>
+     * @return whether  the update of configuration is
+     *          success or not.
+     *          0x03 - failure
+     *          0x00 - success
+     *          0xFF - Service Unavailable
+     * @throws  IOException if any exception occurs during this operation
+     */
+    @SystemApi
+    public int disableWlc() throws IOException {
+      try {
+        return sNxpService.disableWlc();
+      } catch (RemoteException e) {
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        return 0xFF;
       }
     }
 }
