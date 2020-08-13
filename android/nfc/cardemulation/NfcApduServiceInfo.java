@@ -122,7 +122,7 @@ public final class NfcApduServiceInfo
                             boolean requiresUnlock, int bannerResource, int uid,
                             String settingsActivityName, ESeInfo seExtension,
                             boolean modifiable) {
-    super(info, description, nfcAidGroups2AidGroups(staticNfcAidGroups),
+    super(info, onHost, description, nfcAidGroups2AidGroups(staticNfcAidGroups),
           nfcAidGroups2AidGroups(dynamicNfcAidGroups), requiresUnlock,
           bannerResource, uid, settingsActivityName, null, null);
     this.mModifiable = modifiable;
@@ -366,7 +366,7 @@ public final class NfcApduServiceInfo
    */
   public ApduServiceInfo createApduServiceInfo() {
     return new ApduServiceInfo(
-        this.getResolveInfo(), this.getDescription(),
+        this.getResolveInfo(), this.isOnHost(), this.getDescription(),
         nfcAidGroups2AidGroups(this.getStaticNfcAidGroups()),
         nfcAidGroups2AidGroups(this.getDynamicNfcAidGroups()),
         this.requiresUnlock(), this.getBannerId(), this.getUid(),
