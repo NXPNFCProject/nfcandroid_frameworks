@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NXP
+ * Copyright 2020 NXP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.nxp.sems;
+package com.nxp.ls;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.BufferUnderflowException;

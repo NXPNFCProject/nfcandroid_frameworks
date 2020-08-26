@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NXP
+ * Copyright 2020 NXP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-package com.nxp.sems;
+package com.nxp.ls;
 
-public final class SemsException extends Exception {
-  String reasonCode = "";
-  public SemsException(String reason) {
-    super(reason);
-    reasonCode = reason;
-  }
-
-  public String getReason() { return reasonCode; }
+public interface ISemsCallback {
+  /**
+   * Invoked when SEMS script execution completes.
+   */
+  public void onSemsComplete(int status);
 }

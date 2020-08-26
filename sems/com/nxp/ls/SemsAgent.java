@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NXP
+ * Copyright 2020 NXP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.nxp.sems;
+package com.nxp.ls;
 
 import android.content.Context;
 import android.util.Log;
@@ -23,13 +23,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import com.nxp.sems.channel.ISemsApduChannel;
-import com.nxp.sems.channel.SemsApduChannelFactory;
-import com.nxp.sems.channel.SemsOmapiApduChannel;
-import com.nxp.sems.SemsException;
-import com.nxp.sems.SemsExecutor;
-import com.nxp.sems.ISemsCallback;
-import com.nxp.sems.SemsStatus;
+import com.nxp.ls.channel.ISemsApduChannel;
+import com.nxp.ls.channel.SemsApduChannelFactory;
+import com.nxp.ls.channel.SemsOmapiApduChannel;
+import com.nxp.ls.SemsException;
+import com.nxp.ls.SemsExecutor;
+import com.nxp.ls.ISemsCallback;
+import com.nxp.ls.SemsStatus;
 
 public final class SemsAgent {
   public static final String TAG = "SEMS-SemsAgent";

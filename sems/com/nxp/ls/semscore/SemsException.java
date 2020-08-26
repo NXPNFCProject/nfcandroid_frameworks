@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NXP
+ * Copyright 2020 NXP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,14 @@
  * limitations under the License.
  */
 
-package com.nxp.sems.channel;
+package com.nxp.ls;
 
-public class SemsRawApduChannel implements ISemsApduChannel {
-
-  @Override
-  public byte[] open(byte[] aid) {
-    // TODO Auto-generated method stub
-    return new byte[2];
+public final class SemsException extends Exception {
+  String reasonCode = "";
+  public SemsException(String reason) {
+    super(reason);
+    reasonCode = reason;
   }
 
-  @Override
-  public byte[] transmit(byte[] buffer) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public void close() {
-    // TODO Auto-generated method stub
-    return;
-  }
+  public String getReason() { return reasonCode; }
 }

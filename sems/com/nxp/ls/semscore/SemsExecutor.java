@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NXP
+ * Copyright 2020 NXP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.nxp.sems;
+package com.nxp.ls;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -29,11 +29,11 @@ import java.util.Vector;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
-import com.nxp.sems.SemsTLV;
-import com.nxp.sems.SemsUtil;
-import com.nxp.sems.channel.ISemsApduChannel;
-import com.nxp.sems.ISemsCallback;
-import com.nxp.sems.SemsStatus;
+import com.nxp.ls.SemsTLV;
+import com.nxp.ls.SemsUtil;
+import com.nxp.ls.channel.ISemsApduChannel;
+import com.nxp.ls.ISemsCallback;
+import com.nxp.ls.SemsStatus;
 import android.content.Context;
 
 public class SemsExecutor {

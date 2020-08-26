@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NXP
+ * Copyright 2020 NXP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.nxp.sems.channel;
+package com.nxp.ls.channel;
 
 import android.content.Context;
 import android.se.omapi.*;
@@ -25,7 +25,7 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeoutException;
 import android.se.omapi.SEService.OnConnectedListener;
 import android.util.Log;
-import com.nxp.sems.SemsException;
+import com.nxp.ls.SemsException;
 import android.os.Bundle;
 import java.util.NoSuchElementException;
 

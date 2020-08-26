@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NXP
+ * Copyright 2020 NXP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package com.nxp.sems;
+package com.nxp.ls.channel;
 
-public enum SemsStatus {
-  SEMS_STATUS_SUCCESS,
-  SEMS_STATUS_FAILED,
-  SEMS_STATUS_UNKNOWN
+import java.io.IOException;
+
+public interface ISemsApduChannel {
+  byte[] open(byte[] aid) throws IOException;
+  byte[] transmit(byte[] buffer) throws IOException;
+  void close();
 }
