@@ -108,6 +108,8 @@ public final class NfcApduServiceInfo
    */
   int mServiceState;
 
+  /*Holds value of statically defined (in application xml) secureElementName of offHostService*/
+  static String mNfcStaticOffHostName;
   /**
    * nxp se extension
    */
@@ -163,6 +165,19 @@ public final class NfcApduServiceInfo
         if (parser == null) {
           throw new XmlPullParserException(
               "No " + OffHostApduService.SERVICE_META_DATA + " meta-data");
+        }
+        AttributeSet attrs = Xml.asAttributeSet(parser);
+        Resources res = pm.getResourcesForApplication(si.applicationInfo);
+        TypedArray sa =
+            res.obtainAttributes(attrs, com.android.internal.R.styleable.OffHostApduService);
+        mNfcStaticOffHostName =
+            sa.getString(com.android.internal.R.styleable.OffHostApduService_secureElementName);
+        if (mNfcStaticOffHostName != null) {
+          if (mNfcStaticOffHostName.equals("eSE")) {
+            mNfcStaticOffHostName = "eSE1";
+          } else if (mNfcStaticOffHostName.equals("SIM")) {
+            mNfcStaticOffHostName = "SIM1";
+          }
         }
 
         /* load se extension xml */
@@ -370,7 +385,7 @@ public final class NfcApduServiceInfo
         nfcAidGroups2AidGroups(this.getStaticNfcAidGroups()),
         nfcAidGroups2AidGroups(this.getDynamicNfcAidGroups()),
         this.requiresUnlock(), this.getBannerId(), this.getUid(),
-        this.getSettingsActivityName(), null, null);
+        this.getSettingsActivityName(), this.getOffHostSecureElement(), mNfcStaticOffHostName);
   }
 
   /**
