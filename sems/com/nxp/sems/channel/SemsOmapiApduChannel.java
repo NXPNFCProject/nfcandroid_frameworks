@@ -32,6 +32,7 @@ import java.util.NoSuchElementException;
 public class SemsOmapiApduChannel implements ISemsApduChannel {
   public static final String TAG = "SEMS-SemsApduChannel";
   private final long SERVICE_CONNECTION_TIME_OUT = 3000;
+  private static final String ESE1_TERMINAL = "eSE1";
   private Object serviceMutex = new Object();
   private Timer connectionTimer;
   private ServiceConnectionTimerTask mTimerTask =
@@ -43,6 +44,7 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
   private static Channel sChannel;
   private static Context sContext;
   private static byte meSEIdx;
+  private Reader mReader = null;
   private static SemsOmapiApduChannel sOmapiChannel = null;
   private BindToSEService bindService = null;
 
@@ -128,16 +130,22 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
       Log.d(TAG, "Unable to establish connection - exiting");
       return;
     }
-    Reader[] readers = seService.getReaders();
-    if (readers.length > meSEIdx) {
-      try {
-        sSession = readers[meSEIdx].openSession();
-      } catch (Exception e) {
-        throw new SemsException(
-            "Exception during ApduChannel session intialization");
+    try {
+      Reader[] readers = seService.getReaders();
+      for (Reader reader : readers) {
+        if (reader.getName().equals(ESE1_TERMINAL)) {
+          mReader = reader;
+          break;
+        }
       }
-    } else {
-      throw new SemsException("Terminal not available");
+      if (mReader == null)
+        throw new SemsException("Terminal not available");
+      sSession = mReader.openSession();
+      if (sSession == null)
+        throw new SemsException("Not available to intialize session");
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new SemsException(e.getMessage());
     }
   }
   /**
