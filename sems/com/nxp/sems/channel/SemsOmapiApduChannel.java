@@ -34,6 +34,7 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
   private final long SERVICE_CONNECTION_TIME_OUT = 3000;
   private static final String ESE1_TERMINAL = "eSE1";
   private Object serviceMutex = new Object();
+  private boolean mFlagServiceMutex = false;
   private Timer connectionTimer;
   private ServiceConnectionTimerTask mTimerTask =
       new ServiceConnectionTimerTask();
@@ -95,6 +96,7 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
       Log.d(TAG, " OnConnectedListener successfully onConnected");
       synchronized (serviceMutex) {
         mbIsConnected = true;
+        mFlagServiceMutex = true;
         serviceMutex.notify();
       }
     }
@@ -214,18 +216,24 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
   class ServiceConnectionTimerTask extends TimerTask {
     @Override
     public void run() {
-      synchronized (serviceMutex) { serviceMutex.notifyAll(); }
+      synchronized (serviceMutex) {
+        mFlagServiceMutex = true;
+        serviceMutex.notifyAll();
+      }
     }
   }
 
   private void waitForConnection() throws SemsException {
     synchronized (serviceMutex) {
       if (!mbIsConnected) {
-        try {
-          serviceMutex.wait();
-        } catch (InterruptedException e) {
-          throw new SemsException("Connection to eSE interrupted");
+        while (!mFlagServiceMutex) {
+          try {
+            serviceMutex.wait();
+          } catch (InterruptedException e) {
+            Log.e(TAG, "Connection to eSE interrupted");
+          }
         }
+        mFlagServiceMutex = false;
       }
       if (!mbIsConnected) {
         throw new SemsException("Service could not be connected after " +
