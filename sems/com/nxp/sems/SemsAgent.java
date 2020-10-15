@@ -48,6 +48,7 @@ public final class SemsAgent {
   private ISemsApduChannel mSemsApduChannel = null;
   private SemsExecutor mExecutor = null;
   public static Object semsObj = new Object();
+  public static boolean flagSemsObj = false;
 
   /**
    * Returns SemsAgent singleton object
@@ -121,11 +122,14 @@ public final class SemsAgent {
                                    new SemsExecutionStatus());
     if (status == SEMS_STATUS_SUCCESS) {
       synchronized (semsObj) {
-        try {
-          semsObj.wait();
-        } catch (InterruptedException e) {
-          throw new SemsException("Wait on SEMS script Execution failed");
+        while (!flagSemsObj) {
+          try {
+            semsObj.wait();
+          } catch (InterruptedException e) {
+            Log.e(TAG, "Wait on SEMS script Execution failed");
+          }
         }
+        flagSemsObj = false;
       }
 
       return SemsExecutionStatus.mSemsExecutionStatus;

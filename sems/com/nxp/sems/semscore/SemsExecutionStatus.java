@@ -19,6 +19,9 @@ public final class SemsExecutionStatus implements ISemsCallback {
   public static int mSemsExecutionStatus;
   public void onSemsComplete(int status) {
     mSemsExecutionStatus = status;
-    synchronized (SemsAgent.semsObj) { SemsAgent.semsObj.notify(); }
+    synchronized (SemsAgent.semsObj) {
+      SemsAgent.flagSemsObj = true;
+      SemsAgent.semsObj.notify();
+    }
   }
 }
