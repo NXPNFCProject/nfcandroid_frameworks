@@ -41,9 +41,10 @@ public final class SemsAgent {
   public static final short major = 0;
   public static final short minor = 6;
 
+  private static final byte DEFAULT_TERMINAL_ID = 0;
   private static SemsAgent sInstance;
   private static Context sContext = null;
-  private static byte sTerminalID = 0;
+  private static byte sTerminalID = DEFAULT_TERMINAL_ID;
   private ISemsApduChannel mSemsApduChannel = null;
   private SemsExecutor mExecutor = null;
 
@@ -83,10 +84,28 @@ public final class SemsAgent {
    */
   public int SemsExecuteScript(String inputScriptBuffer, String outputFilename,
                                ISemsCallback callback) throws SemsException {
+    return SemsExecuteScript(inputScriptBuffer, outputFilename, callback,
+                             DEFAULT_TERMINAL_ID);
+  }
 
+  /**
+   * Perform secure SEMS script execution
+   * <br/>
+   * inputScript : The Input secure script buffer in string format,
+   * fileName : Output response storage file name
+   * callback : Callback to be invoked once SEMS execution is done
+   * terminalID : Terminal ID of secure element
+   * @param void
+   *
+   * @return {@code status} 0 in SUCCESS, otherwise 1 in failure.
+   */
+  public int SemsExecuteScript(String inputScriptBuffer, String outputFilename,
+                               ISemsCallback callback, byte terminalID)
+      throws SemsException {
     if (inputScriptBuffer == null) {
       throw new SemsException("Invalid/Null Input script");
     }
+    sTerminalID = terminalID;
     mSemsApduChannel = SemsApduChannelFactory.getInstance(
         SemsApduChannelFactory.OMAPI_CHANNEL, sContext, sTerminalID);
     mExecutor = SemsExecutor.getInstance(mSemsApduChannel, sContext);
