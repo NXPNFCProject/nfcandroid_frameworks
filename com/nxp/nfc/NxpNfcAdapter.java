@@ -843,4 +843,44 @@ public final class NxpNfcAdapter {
         return null;
       }
     }
+    /**
+     * This API starts extended field detect mode.
+     * @param detectionTimeout : The time after 1st RF ON to
+     *                            exit extended filed detect mode(msec).
+     * @return status     :-0x00 :EFDSTATUS_SUCCESS
+     *                      0x01 :EFDSTATUS_FAILED
+     *                      0x02 :EFDSTATUS_ERROR_ALREADY_STARTED
+     *                      0x03 :EFDSTATUS_ERROR_FEATURE_NOT_SUPPORTED
+     *                      0x04 :EFDSTATUS_ERROR_FEATURE_DISABLED_IN_CONFIG
+     *                      0x05 :EFDSTATUS_ERROR_NFC_IS_OFF
+     *                      0x06 :EFDSTATUS_ERROR_UNKNOWN
+     * <p>Requires {@link   android.Manifest.permission#NFC} permission.
+     */
+    public int startExtendedFieldDetectMode(int detectionTimeout) {
+      try {
+        return sNxpService.startExtendedFieldDetectMode(detectionTimeout);
+      } catch (RemoteException e) {
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        return 0x06; /*EFDSTATUS_ERROR_UNKNOWN*/
+      }
+    }
+    /**
+     * This API stops extended field detect mode.
+     * @return status     :-0x00 :EFDSTATUS_SUCCESS
+     *                      0x01 :EFDSTATUS_FAILED
+     *                      0x05 :EFDSTATUS_ERROR_NFC_IS_OFF
+     *                      0x06 :EFDSTATUS_ERROR_UNKNOWN
+     *                      0x07 :EFDSTATUS_ERROR_NOT_STARTED
+     * <p>Requires {@link   android.Manifest.permission#NFC} permission.
+     */
+    public int stopExtendedFieldDetectMode() {
+      try {
+        return sNxpService.stopExtendedFieldDetectMode();
+      } catch (RemoteException e) {
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        return 0x06; /*EFDSTATUS_ERROR_UNKNOWN*/
+      }
+    }
 }
