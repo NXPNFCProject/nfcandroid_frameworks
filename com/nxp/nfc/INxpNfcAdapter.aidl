@@ -1,5 +1,5 @@
  /*
-  * Copyright (C) 2015-2020 NXP Semiconductors
+  * Copyright (C) 2015-2021 NXP Semiconductors
   *
   * Licensed under the Apache License, Version 2.0 (the "License");
   * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package com.nxp.nfc;
 
 import com.nxp.nfc.INxpNfcAdapterExtras;
-import com.nxp.nfc.NfcAidServiceInfo;
 /**
  * @hide
  */
@@ -26,7 +25,6 @@ interface INxpNfcAdapter
     void MifareDesfireRouteSet(int routeLoc, boolean fullPower, boolean lowPower, boolean noPower);
     void MifareCLTRouteSet(int routeLoc, boolean fullPower, boolean lowPower, boolean noPower);
     void NfcFRouteSet(int routeLoc, boolean fullPower, boolean lowPower, boolean noPower);
-    List<NfcAidServiceInfo> getServicesAidInfo(int userId, String category);
     int[] getActiveSecureElementList(String pkg);
     INxpNfcAdapterExtras getNxpNfcAdapterExtrasInterface();
     int mPOSSetReaderMode(String pkg, boolean on);
@@ -42,7 +40,6 @@ interface INxpNfcAdapter
     int getMaxAidRoutingTableSize();
     int getCommittedAidRoutingTableSize();
     int getSelectedUicc();
-    int updateServiceState(int userId , in Map serviceState);
     int activateSeInterface();
     int deactivateSeInterface();
     int setFieldDetectMode(boolean mode);

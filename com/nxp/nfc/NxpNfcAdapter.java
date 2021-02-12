@@ -2,7 +2,7 @@
  *
  *  The original Work has been changed by NXP Semiconductors.
  *
- *  Copyright (C) 2013-2020 NXP Semiconductors
+ *  Copyright (C) 2013-2021 NXP Semiconductors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -217,32 +217,6 @@ public final class NxpNfcAdapter {
        }
      }
 
-    /**
-     * This api returns the CATEGORY_OTHER (non Payment)Services registered by
-     * the user along with the size of the registered aid group. This api has to
-     * be called when aid routing full intent is broadcast by the system.
-     * <p>This gives the list of both static and dynamic card emulation services
-     * registered by the user.
-     * <p> This api can be called to get the list of offhost and onhost
-     * cardemulation services registered by the user. <ul> <li> If the category
-     * is CATEGORY_PAYMENT than null value is returned. <li> If there are no non
-     * payment services null value is returned.
-     * </ul>
-     * @param UserID  The user id of current user
-     * @param category The category i.e. CATEGORY_PAYMENT , CATEGORY_OTHER
-     * @return The List of NfcAidServiceInfo objects
-     */
-    public List<NfcAidServiceInfo> getServicesAidInfo(int UserID,
-                                                      String category)
-        throws IOException {
-      try {
-        return sNxpService.getServicesAidInfo(UserID, category);
-      } catch (RemoteException e) {
-        e.printStackTrace();
-        attemptDeadServiceRecovery(e);
-        return null;
-      }
-    }
     /**
      * @hide
      */
@@ -561,37 +535,6 @@ public final class NxpNfcAdapter {
             attemptDeadServiceRecovery(e);
             return 0x00;
         }
-    }
-
-    /**
-     * This api is called by applications to update the service state of card
-     * emualation services. <p>This api is implemented for  {@link
-     * android.nfc.cardemulation.CardEmulation#CATEGORY_OTHER}. <p>Requires
-     * {@link android.Manifest.permission#NFC} permission.<ul> <li>This api
-     * should be called only when the intent AID routing table full is sent by
-     * NfcService. <li>The service state change is persistent for particular
-     * UserId. <li>The service state is written to the Xml and read before every
-     * routing table  change. <li>If there is any change in routing table  the
-     * routing table is updated to NFCC after calling this api.
-     * </ul>
-     * @param  serviceState Map of ServiceName and state of service.
-     * @return whether  the update of Card Emulation services is
-     *          success or not.
-     *          0xFF - failure
-     *          0x00 - success
-     * @throws  IOException if any exception occurs during the service state
-     * change.
-     */
-    public int updateServiceState(Map<String, Boolean> serviceState)
-        throws IOException {
-      try {
-        return sNxpService.updateServiceState(UserHandle.myUserId(),
-                                              serviceState);
-      } catch (RemoteException e) {
-        e.printStackTrace();
-        attemptDeadServiceRecovery(e);
-        return 0xFF;
-      }
     }
 
     /**
