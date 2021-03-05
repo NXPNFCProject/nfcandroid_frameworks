@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2020 NXP
+ * Copyright 2019-2021 NXP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,11 +40,12 @@ public final class SemsAgent {
   public static final byte SEMS_STATUS_DENIED = 0x03;
   public static final byte SEMS_STATUS_UNKNOWN = 0x0F;
   public static final short major = 0;
-  public static final short minor = 10;
+  public static final short minor = 11;
 
+  private static final byte DEFAULT_TERMINAL_ID = 1;
   private static SemsAgent sInstance;
   private static Context sContext = null;
-  private static byte sTerminalID = 0;
+  private static byte sTerminalID = DEFAULT_TERMINAL_ID;
   private ISemsApduChannel mSemsApduChannel = null;
   private SemsExecutor mExecutor = null;
   public static Object semsObj = new Object();
@@ -86,7 +87,25 @@ public final class SemsAgent {
    */
   public int SemsExecuteScript(String inputScriptBuffer, String outputFilename,
                                ISemsCallback callback) throws SemsException {
+    return SemsExecuteScript(inputScriptBuffer, outputFilename, callback,
+                             DEFAULT_TERMINAL_ID);
+  }
 
+  /**
+   * Perform secure SEMS script execution
+   * <br/>
+   * inputScript : The Input secure script buffer in string format,
+   * fileName : Output response storage file name
+   * callback : Callback to be invoked once SEMS execution is done
+   * omapiTerminalId : OMAPI Terminal ID of secure element
+   * @param void
+   *
+   * @return {@code status} 0 in SUCCESS, otherwise 1 in failure.
+   */
+  public int SemsExecuteScript(String inputScriptBuffer, String outputFilename,
+                               ISemsCallback callback, byte omapiTerminalId)
+      throws SemsException {
+    sTerminalID = omapiTerminalId;
     if (inputScriptBuffer == null) {
       throw new SemsException("Invalid/Null Input script");
     }

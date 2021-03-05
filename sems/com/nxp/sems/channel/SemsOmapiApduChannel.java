@@ -32,7 +32,7 @@ import java.util.NoSuchElementException;
 public class SemsOmapiApduChannel implements ISemsApduChannel {
   public static final String TAG = "SEMS-SemsApduChannel";
   private final long SERVICE_CONNECTION_TIME_OUT = 3000;
-  private static final String ESE1_TERMINAL = "eSE1";
+  private static String ESE_TERMINAL_NAME = "eSE1";
   private Object serviceMutex = new Object();
   private boolean mFlagServiceMutex = false;
   private Timer connectionTimer;
@@ -44,7 +44,6 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
   private static Session sSession = null;
   private static Channel sChannel;
   private static Context sContext;
-  private static byte meSEIdx;
   private Reader mReader = null;
   private static SemsOmapiApduChannel sOmapiChannel = null;
   private BindToSEService bindService = null;
@@ -57,9 +56,9 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
    *
    * @return {@code SemsAgent}.
    */
-  public static SemsOmapiApduChannel getInstance(byte eSEx, Context context)
+  public static SemsOmapiApduChannel getInstance(byte terminalID, Context context)
       throws SemsException {
-    meSEIdx = eSEx;
+    ESE_TERMINAL_NAME = "eSE" + String.valueOf(terminalID);
     sContext = context;
     boolean initRequired = false;
     if (sOmapiChannel == null || seService == null || sSession == null
@@ -135,7 +134,7 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
     try {
       Reader[] readers = seService.getReaders();
       for (Reader reader : readers) {
-        if (reader.getName().equals(ESE1_TERMINAL)) {
+        if (reader.getName().equals(ESE_TERMINAL_NAME)) {
           mReader = reader;
           break;
         }
