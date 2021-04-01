@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2020 NXP
+ * Copyright 2019-2021 NXP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -932,7 +932,7 @@ public class SemsExecutor {
         Log.e(TAG, "sendAPCertificate received incorrect rapdu");
         closeLogicalChannel(channelNumber);
         updateSemsStatus(rapdu);
-        return stat;
+        return SemsStatus.SEMS_STATUS_FAILED;
       }
       if (SemsUtil.getSW(rapdu) != (short)0x9000) {
         Log.e(TAG, "certificate frame command failed");

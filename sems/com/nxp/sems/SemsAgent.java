@@ -39,8 +39,8 @@ public final class SemsAgent {
   public static final byte SEMS_STATUS_BUSY = 0x02;
   public static final byte SEMS_STATUS_DENIED = 0x03;
   public static final byte SEMS_STATUS_UNKNOWN = 0x0F;
-  public static final short major = 0;
-  public static final short minor = 11;
+  public static final short major = 1;
+  public static final short minor = 0;
 
   private static final byte DEFAULT_TERMINAL_ID = 1;
   private static SemsAgent sInstance;
