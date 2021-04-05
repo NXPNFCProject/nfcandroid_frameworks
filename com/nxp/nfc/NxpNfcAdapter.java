@@ -2,7 +2,7 @@
  *
  *  The original Work has been changed by NXP.
  *
- *  Copyright 2013-2020 NXP
+ *  Copyright 2013-2021 NXP
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -39,6 +39,13 @@ public final class NxpNfcAdapter {
     private static int ALL_SE_ID_TYPE = 0x07;
     // Guarded by NfcAdapter.class
     static boolean sIsInitialized = false;
+
+    /**
+     * Flag for use with {@link #enableReaderMode(Activity, ReaderCallback, int,
+     * Bundle)}. <p> Setting this flag enables polling for Nfc-Q(Quiet tag)
+     * technology.
+     */
+    public static final int FLAG_READER_NFC_Q = 0x20;
 
     /**
      * The NfcAdapter object for each application context.
