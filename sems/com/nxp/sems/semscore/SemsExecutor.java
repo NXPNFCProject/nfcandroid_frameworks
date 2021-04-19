@@ -300,14 +300,9 @@ public class SemsExecutor {
    *
    * @return {@code true} if the SW returned is 9000, {@code false} otherwise.
    */
-  private byte[] selectApplication(byte channel, byte[] AID) {
+  private byte[] selectApplication(byte channel, byte[] AID) throws Exception{
     Log.d(TAG, "Select applet: ");
-    try {
-      return sChannel.open(AID);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return null;
+    return sChannel.open(AID);
   }
 
   /**
@@ -322,17 +317,12 @@ public class SemsExecutor {
    *
    * @return {@code true} if the SW returned is 9000, {@code false} otherwise.
    */
-  private byte[] sendSHA1OfCallerPackage(byte channel, byte[] callerPackage) {
+  private byte[] sendSHA1OfCallerPackage(byte channel, byte[] callerPackage) throws Exception{
     byte[] SHA1ofCallerPackage = SemsUtil.SHA1(callerPackage);
     final byte[] header = {(byte)0x80, (byte)0xE2, (byte)0x00, 0x00,
                            (byte)0x16, (byte)0x4F, (byte)0x14};
     Log.d(TAG, "Register Caller: ");
-    try {
-      return sChannel.transmit(SemsUtil.append(header, SHA1ofCallerPackage));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return null;
+    return sChannel.transmit(SemsUtil.append(header, SHA1ofCallerPackage));
   }
 
   /**
@@ -559,7 +549,7 @@ public class SemsExecutor {
    *
    * @return {@code true} if the SW returned is 9000, {@code false} otherwise.
    */
-  private byte[] executeScript() {
+  private void executeScript() {
 
     String scriptIn = this.inputScript;
     String scriptOut = this.outputScript;
@@ -577,7 +567,7 @@ public class SemsExecutor {
         putIntoLog(sw6987, ErrorResponse);
         updateSemsStatus(sw6987);
         Log.e(TAG, ">>>>>>>>>> parseHexString returned NULL <<<<<<<<<<");
-        return sw6987;
+        return;
       }
       List<SemsTLV> scriptTlvs = SemsTLV.parse(data);
 
@@ -587,7 +577,7 @@ public class SemsExecutor {
         putIntoLog(sw6987, ErrorResponse);
         updateSemsStatus(sw6987);
         Log.e(TAG, ">>>>>>>>>> Error : Script size 0 <<<<<<<<<<");
-        return sw6987;
+        return;
       }
       Log.d(TAG, "");
       Log.d(TAG, ">>>>>>>>>> Starting SEMS Execute Script <<<<<<<<<<");
@@ -605,8 +595,7 @@ public class SemsExecutor {
             if (status != SemsStatus.SEMS_STATUS_SUCCESS) {
               closeLogicalChannel(channelNumber);
               updateSemsStatus(sw6987);
-              return Arrays.copyOfRange(rapduSelect, rapduSelect.length - 2,
-                                        rapduSelect.length);
+              return;
             }
           }
           // fall-through
@@ -620,12 +609,12 @@ public class SemsExecutor {
               Log.e(TAG, "sendSHA1OfCallerPackage received incorrect rapdu");
               closeLogicalChannel(channelNumber);
               updateSemsStatus(rapdu);
-              return sw6987;
+              return;
             }
             if (SemsUtil.getSW(rapdu) != (short)0x9000) {
               closeLogicalChannel(channelNumber);
               updateSemsStatus(rapdu);
-              return Arrays.copyOfRange(rapdu, rapdu.length - 2, rapdu.length);
+              return;
             }
           }
           // fall-through
@@ -636,7 +625,7 @@ public class SemsExecutor {
              */
             if (ProcessCertificateFrame(scriptTlvs) !=
                 SemsStatus.SEMS_STATUS_SUCCESS) {
-              return sw6987;
+              return;
             }
           }
           // fall-through
@@ -645,7 +634,7 @@ public class SemsExecutor {
              * STEP 5 of executeScript - Authentication frame command
              */
             if (verifySignature(scriptTlvs) != SemsStatus.SEMS_STATUS_SUCCESS) {
-              return sw6987;
+              return;
             }
           }
           // fall-through
@@ -664,17 +653,17 @@ public class SemsExecutor {
         putIntoLog(sw6F00, ErrorResponse);
         closeLogicalChannel(channelNumber);
         updateSemsStatus(sw6F00);
-        return sw6F00;
+        return;
       }
       putIntoLog(response, SWResponse);
       closeLogicalChannel(channelNumber);
       updateSemsStatus(response);
-      return swReturned;
+      return;
     }catch(Exception e) {
       putIntoLog(sw6987, ErrorResponse);
       updateSemsStatus(sw6987);
       Log.e(TAG, ">>>>>>>>>> Error : Invalid Script <<<<<<<<<<");
-      return sw6987;
+      return;
     } finally {
       /*Always write log file*/
       writeScriptOutFile(scriptOut);
@@ -692,7 +681,7 @@ public class SemsExecutor {
    * @return {@code SEMS_STATE_SUCCESS} if processing is success, {@code false}
    * otherwise.
    */
-  private SemsStatus SemsSecureCommandProcess(List<SemsTLV> scriptTlvs) {
+  private SemsStatus SemsSecureCommandProcess(List<SemsTLV> scriptTlvs) throws Exception {
     SemsStatus stat = SemsStatus.SEMS_STATUS_FAILED;
     byte rapdu[] = sw6987;
     SemsTLV secureCommand;
@@ -962,7 +951,7 @@ public class SemsExecutor {
    * @return {@code SEMS_STATE_SUCCESS} if processing is success, {@code false}
    * otherwise.
    */
-  private SemsStatus SelectSems() {
+  private SemsStatus SelectSems() throws Exception {
     byte channelNumber = 0;
     SemsTLV tlvRootEntityKeyID;
     List<SemsTLV> tlvs;
