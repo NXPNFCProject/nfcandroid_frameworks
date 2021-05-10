@@ -42,6 +42,13 @@ public final class NxpNfcAdapter {
     static boolean sIsInitialized = false;
 
     /**
+     * Flag for use with {@link #enableReaderMode(Activity, ReaderCallback, int,
+     * Bundle)}. <p> Setting this flag enables polling for Nfc-Q(Quiet tag)
+     * technology.
+     */
+    public static final int FLAG_READER_NFC_Q = 0x20;
+
+    /**
      * The NfcAdapter object for each application context.
      * There is a 1-1 relationship between application context and
      * NfcAdapter object.
