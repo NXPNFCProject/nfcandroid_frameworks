@@ -55,6 +55,7 @@ public class SemsExecutor {
   private static ISemsApduChannel sChannel;
   private final byte basicChannel = 0x00;
   private String callerPackageName;
+  private String shatype;
   private static String sRespOutlog;
   private byte[] AID_MEM;
   private String encryptedScriptDirectory = "";
@@ -73,6 +74,7 @@ public class SemsExecutor {
   private boolean lsCommandSeen = false;
   private byte mState;
   private static SemsExecutor sSemsExecutor;
+  public String SEMS_HASH_TYPE_SHA1   = "SHA1";
   /**
    * AID of the SEMS Application Instance.
    */
@@ -115,6 +117,32 @@ public class SemsExecutor {
   }
   private SemsExecutor() {
     this.AID_MEM = SEMS_APP_AID;
+    this.shatype = SEMS_HASH_TYPE_SHA1;
+  }
+
+  /**
+   * Set Hash type of the algorithm execution.
+   * <br/>
+   * @param Hash algorithm type used by SEMS
+   * to set
+   * @return {@code status} 0 in SUCCESS, otherwise -1 in failure
+   */
+  public synchronized int setHashAlgorithm(String shaType) {
+    this.shatype = shaType;
+    return 0;
+  }
+
+  /**
+   * Get Hash type of the algorithm execution.
+   * <br/>
+   * Returns response SHAType to Application
+   * From SEMS
+   *
+   * @return SHAType use for Hash
+   * script.
+   */
+  public synchronized String getHashAlgorithm() throws Exception {
+    return shatype;
   }
 
   /**
@@ -324,6 +352,27 @@ public class SemsExecutor {
     Log.d(TAG, "Register Caller: ");
     return sChannel.transmit(SemsUtil.append(header, SHA1ofCallerPackage));
   }
+
+  /**
+   * Performs store data operation of caller information.
+   * <br/>
+   * The Input SHA-256 digest of caller package name,
+   * The STORE DATA APDU command is used by the SEMS Device
+   * Agent to provide the SEMS Application with an identifier
+   * of the caller (SP Device Application), e.g.
+   * the digest value of the SP Device Application package name
+   * @param void
+   *
+   * @return {@code true} if the SW returned is 9000, {@code false} otherwise.
+   */
+  private byte[] sendSHA256OfCallerPackage(byte channel, byte[] callerPackage) throws Exception{
+    byte[] SHA256ofCallerPackage = SemsUtil.SHA256(callerPackage);
+    final byte[] header = {(byte)0x80, (byte)0xE2, (byte)0x00, 0x00,
+                           (byte)0x16, (byte)0x4F, (byte)0x14};
+    Log.d(TAG, "Register Caller: ");
+    return sChannel.transmit(SemsUtil.append(header, SHA256ofCallerPackage));
+  }
+
 
   /**
    * Performs store data operation of caller information.
@@ -603,8 +652,11 @@ public class SemsExecutor {
             /*
              * STEP 3 of executeScript - Sending SHA1 of Caller package
              */
-            rapdu = sendSHA1OfCallerPackage(channelNumber,
-                                            callerPackageName.getBytes());
+            if (shatype == "SHA256") {
+              rapdu = sendSHA256OfCallerPackage(channelNumber, callerPackageName.getBytes());
+            } else {
+              rapdu = sendSHA1OfCallerPackage(channelNumber, callerPackageName.getBytes());
+            }
             if (rapdu == null) {
               Log.e(TAG, "sendSHA1OfCallerPackage received incorrect rapdu");
               closeLogicalChannel(channelNumber);

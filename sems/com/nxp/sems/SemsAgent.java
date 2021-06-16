@@ -39,6 +39,9 @@ public final class SemsAgent {
   public static final byte SEMS_STATUS_BUSY = 0x02;
   public static final byte SEMS_STATUS_DENIED = 0x03;
   public static final byte SEMS_STATUS_UNKNOWN = 0x0F;
+  public static final byte SEMS_STATUS_HASH_INVALID = 0x04;
+  public String SEMS_HASH_TYPE_SHA1   = "SHA1";
+  public String SEMS_HASH_TYPE_SHA256 = "SHA256";
   public static final short major = 1;
   public static final short minor = 1;
 
@@ -50,7 +53,6 @@ public final class SemsAgent {
   private SemsExecutor mExecutor = null;
   public static Object semsObj = new Object();
   public static boolean flagSemsObj = false;
-
   /**
    * Returns SemsAgent singleton object
    * <br/>
@@ -198,5 +200,36 @@ public final class SemsAgent {
     } catch (Exception e) {
       throw new SemsException("Unable to get last sems execute status");
     }
+  }
+
+  /**
+   * Get Hash type of the algorithm execution.
+   * <br/>
+   * Returns response SHAType to Application
+   * From SEMS
+   *
+   * @return Hash algorithm type used by SEMS
+   * script.
+   */
+  public String GetHashAlgorithm() throws Exception {
+    Log.d(TAG, "GetHashAlgorithm");
+    return mExecutor.getHashAlgorithm();
+  }
+
+  /**
+   * Set Hash type of the algorithm execution.
+   * <br/>
+   * Set response SHAType to Application
+   * From SEMS
+   * @param Hash algorithm type used by SEMS
+   * to set
+   * @return {@code status} 0 in SUCCESS, otherwise SEMS_STATUS_HASH_INVALID in failure
+   */
+  public int SetHashAlgorithm(String semsHashAlgoType) throws Exception {
+    Log.d(TAG, "SetHashAlgorithm");
+    if ((semsHashAlgoType != SEMS_HASH_TYPE_SHA1) && (semsHashAlgoType != SEMS_HASH_TYPE_SHA256)) {
+      return SEMS_STATUS_HASH_INVALID;
+    }
+    return mExecutor.setHashAlgorithm(semsHashAlgoType);
   }
 }
