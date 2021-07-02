@@ -8,6 +8,15 @@ This Repo contains any additional information/files required to support the rele
 | :-------------: |:-------------:| 
 | nfcandroid_frameworks   |  git clone https://github.com/NXPNFCProject/nfcandroid_frameworks.git |
 
+#### Supported Version on "br_android_ncihalx_row_12" branch
+| Android Version        | NXP Release          | NXP Tag  |
+| :-------------: |:---------------------:| :-----:|
+| aosp-master                |  12.01.00 (PN80T/PN81T/PN553/PN557) |  NFC_AR_00_18C0_12.01.00_OpnSrc  |
+
+
+
+
+
 
 
 #### Supported Version on "br_android_ncihalx_comm_12" branch
@@ -68,7 +77,8 @@ This Repo contains any additional information/files required to support the rele
 | aosp-master              |  10.00.0B (SN100) |  NFC_AR_00_6000_10.00.0B_OpnSrc |
 | aosp-master              |  10.00.0C (SN110) |  NFC_AR_00_6000_10.00.0C_OpnSrc |
 | android-10.0.0_r2             |  10.00.0D (SN110) |  NFC_AR_00_6000_10.00.0D_OpnSrc |
-| android-10.0.0_r2              |  10.00.0F (SN110) |  NFC_AR_00_6000_10.00.0F_OpnSrc || android-10.0.0_r2              |  10.00.0F (SN110) |  NFC_AR_00_6000_10.00.0F_OpnSrc |
+| android-10.0.0_r2              |  10.00.0F (SN110) |  NFC_AR_00_6000_10.00.0F_OpnSrc |
+| android-10.0.0_r2              |  10.00.0F (SN110) |  NFC_AR_00_6000_10.00.0F_OpnSrc |
 | android-10.0.0_r2              |  10.00.14 (SN1xx) |  NFC_AR_00_6000_10.00.14_OpnSrc |
 | android-10.0.0_r2              |  10.00.15 (SN1xx) |  NFC_AR_00_6000_10.00.15_OpnSrc |
 | android-10.0.0_r2              |  10.00.17 (SN110) |  NFC_AR_00_6000_10.00.17_OpnSrc |
