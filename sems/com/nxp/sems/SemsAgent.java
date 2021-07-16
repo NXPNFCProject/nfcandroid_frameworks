@@ -211,9 +211,16 @@ public final class SemsAgent {
    * @return Hash algorithm type used by SEMS
    * script.
    */
-  public String GetHashAlgorithm() throws Exception {
+  public String GetHashAlgorithm() throws SemsException {
     Log.d(TAG, "GetHashAlgorithm");
-    return mExecutor.getHashAlgorithm();
+    try {
+      mSemsApduChannel = SemsApduChannelFactory.getInstance(
+          SemsApduChannelFactory.OMAPI_CHANNEL, sContext, sTerminalID);
+      mExecutor = SemsExecutor.getInstance(mSemsApduChannel, sContext);
+      return mExecutor.getHashAlgorithm();
+    } catch (Exception e) {
+      throw new SemsException("Unable to get Hash type");
+    }
   }
 
   /**
@@ -225,11 +232,19 @@ public final class SemsAgent {
    * to set
    * @return {@code status} 0 in SUCCESS, otherwise SEMS_STATUS_HASH_INVALID in failure
    */
-  public int SetHashAlgorithm(String semsHashAlgoType) throws Exception {
+  public int SetHashAlgorithm(String semsHashAlgoType) throws SemsException {
     Log.d(TAG, "SetHashAlgorithm");
-    if ((semsHashAlgoType != SEMS_HASH_TYPE_SHA1) && (semsHashAlgoType != SEMS_HASH_TYPE_SHA256)) {
-      return SEMS_STATUS_HASH_INVALID;
+    try {
+      if ((semsHashAlgoType != SEMS_HASH_TYPE_SHA1)
+          && (semsHashAlgoType != SEMS_HASH_TYPE_SHA256)) {
+        return SEMS_STATUS_HASH_INVALID;
+      }
+      mSemsApduChannel = SemsApduChannelFactory.getInstance(
+          SemsApduChannelFactory.OMAPI_CHANNEL, sContext, sTerminalID);
+      mExecutor = SemsExecutor.getInstance(mSemsApduChannel, sContext);
+      return mExecutor.setHashAlgorithm(semsHashAlgoType);
+    } catch (Exception e) {
+      throw new SemsException("Unable to set Hash type");
     }
-    return mExecutor.setHashAlgorithm(semsHashAlgoType);
   }
 }

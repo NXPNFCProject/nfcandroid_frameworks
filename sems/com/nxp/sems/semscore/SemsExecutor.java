@@ -75,6 +75,7 @@ public class SemsExecutor {
   private byte mState;
   private static SemsExecutor sSemsExecutor;
   public String SEMS_HASH_TYPE_SHA1   = "SHA1";
+  public String SEMS_HASH_TYPE_SHA256 = "SHA256";
   /**
    * AID of the SEMS Application Instance.
    */
@@ -141,8 +142,20 @@ public class SemsExecutor {
    * @return SHAType use for Hash
    * script.
    */
-  public synchronized String getHashAlgorithm() throws Exception {
+  public synchronized String getHashAlgorithm() {
     return shatype;
+  }
+
+  /**
+   * Check Hash type of the algorithm execution.
+   * <br/>
+   * Returns response True if shatype is SHA256
+   *
+   * @return boolean TRUE for SHA256 ShaHash type
+   */
+
+  private synchronized boolean isSemsHashAlgoSHA256() {
+    return (shatype == SEMS_HASH_TYPE_SHA256);
   }
 
   /**
@@ -347,9 +360,10 @@ public class SemsExecutor {
    */
   private byte[] sendSHA1OfCallerPackage(byte channel, byte[] callerPackage) throws Exception{
     byte[] SHA1ofCallerPackage = SemsUtil.SHA1(callerPackage);
+
     final byte[] header = {(byte)0x80, (byte)0xE2, (byte)0x00, 0x00,
                            (byte)0x16, (byte)0x4F, (byte)0x14};
-    Log.d(TAG, "Register Caller: ");
+    Log.d(TAG, "Register Caller for SHA1: "+ SHA1ofCallerPackage.length);
     return sChannel.transmit(SemsUtil.append(header, SHA1ofCallerPackage));
   }
 
@@ -368,8 +382,8 @@ public class SemsExecutor {
   private byte[] sendSHA256OfCallerPackage(byte channel, byte[] callerPackage) throws Exception{
     byte[] SHA256ofCallerPackage = SemsUtil.SHA256(callerPackage);
     final byte[] header = {(byte)0x80, (byte)0xE2, (byte)0x00, 0x00,
-                           (byte)0x16, (byte)0x4F, (byte)0x14};
-    Log.d(TAG, "Register Caller: ");
+                           (byte)0x22, (byte)0x4F, (byte)0x20};
+    Log.d(TAG, "Register Caller for SHA256: "+ SHA256ofCallerPackage.length);
     return sChannel.transmit(SemsUtil.append(header, SHA256ofCallerPackage));
   }
 
@@ -652,9 +666,11 @@ public class SemsExecutor {
             /*
              * STEP 3 of executeScript - Sending SHA1 of Caller package
              */
-            if (shatype == "SHA256") {
+            if (isSemsHashAlgoSHA256()) {
+              Log.d(TAG, "Executing the script with SHA256");
               rapdu = sendSHA256OfCallerPackage(channelNumber, callerPackageName.getBytes());
             } else {
+              Log.d(TAG, "Executing the script with SHA1");
               rapdu = sendSHA1OfCallerPackage(channelNumber, callerPackageName.getBytes());
             }
             if (rapdu == null) {
