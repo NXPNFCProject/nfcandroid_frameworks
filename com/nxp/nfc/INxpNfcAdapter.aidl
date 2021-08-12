@@ -33,8 +33,6 @@ interface INxpNfcAdapter
     void changeDiscoveryTech(IBinder binder, int pollTech, int listenTech);
     void startPoll(String pkg);
     byte[]  getFWVersion();
-    byte[] readerPassThruMode(byte status, byte modulationTyp);
-    byte[] transceiveAppData(in byte[] data);
     int setConfig(String configs , String pkg);
     int selectUicc(int uiccSlot);
     int getMaxAidRoutingTableSize();
