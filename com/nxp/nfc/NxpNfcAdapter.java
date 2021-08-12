@@ -558,24 +558,6 @@ public final class NxpNfcAdapter {
       }
     }
 
-    public byte[] readerPassThruMode(byte status, byte modulationTyp)
-        throws IOException {
-      try {
-        return sNxpService.readerPassThruMode(status, modulationTyp);
-      } catch (RemoteException e) {
-        Log.e(TAG, "Remote exception in readerPassThruMode(): ", e);
-        throw new IOException("Remote exception in readerPassThruMode()");
-      }
-    }
-
-    public byte[] transceiveAppData(byte[] data) throws IOException {
-      try {
-        return sNxpService.transceiveAppData(data);
-      } catch (RemoteException e) {
-        Log.e(TAG, "RemoteException in transceiveAppData(): ", e);
-        throw new IOException("RemoteException in transceiveAppData()");
-      }
-    }
     /**
      * This api is called by applications to update the NFC configurations which
      * are already part of libnfc-nxp.conf and libnfc-brcm.conf <p>Requires
