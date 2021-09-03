@@ -1,6 +1,13 @@
 //#######################################
 // com.nxp.ls - library
 //#######################################
+prebuilt_etc {
+    name: "com.nxp.ls.xml",
+    vendor: true,
+    sub_dir: "permissions",
+    src:"com.nxp.ls.xml",
+}
+
 java_library {
 
     name: "com.nxp.ls",

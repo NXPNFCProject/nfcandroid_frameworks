@@ -3,6 +3,12 @@
 //#######################################
 // com.nxp.nfc - library
 //#######################################
+prebuilt_etc {
+    name: "com.nxp.nfc.xml",
+    sub_dir: "permissions",
+    src: "com.nxp.nfc.xml",
+}
+
 java_library {
 
     name: "com.nxp.nfc",
