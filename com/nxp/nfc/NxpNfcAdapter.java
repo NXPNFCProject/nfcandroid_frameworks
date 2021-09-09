@@ -110,6 +110,7 @@ public final class NxpNfcAdapter {
      */
     private static void attemptDeadServiceRecovery(Exception e) {
         Log.e(TAG, "Service dead - attempting to recover",e);
+        sIsInitialized = false;
         INfcAdapter service = getServiceInterface();
         if (service == null) {
             Log.e(TAG, "could not retrieve NFC service during service recovery");
@@ -121,6 +122,9 @@ public final class NxpNfcAdapter {
         // and on a well-behaved system should never happen
         sService = service;
         sNxpService = getNxpNfcAdapterInterface();
+        if (sNxpService != null) {
+            sIsInitialized = true;
+        }
         return;
     }
     /**
