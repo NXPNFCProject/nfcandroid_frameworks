@@ -46,4 +46,6 @@ interface INxpNfcAdapter
     byte[] doReadT4tData(in byte[] fileId);
     int nfcSelfTest(int type);
     int configureSecureReader(boolean on, String readerType);
+    int startExtendedFieldDetectMode(int detectionTimeout);
+    int stopExtendedFieldDetectMode();
 }
