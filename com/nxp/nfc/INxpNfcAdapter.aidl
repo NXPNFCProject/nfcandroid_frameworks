@@ -48,4 +48,7 @@ interface INxpNfcAdapter
     int configureSecureReader(boolean on, String readerType);
     int startExtendedFieldDetectMode(int detectionTimeout);
     int stopExtendedFieldDetectMode();
+    int startRssiMode(int rssiNtfTimeIntervalInMillisec);
+    int stopRssiMode();
+    boolean isRssiEnabled();
 }

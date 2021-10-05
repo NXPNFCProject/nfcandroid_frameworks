@@ -684,6 +684,84 @@ public final class NxpNfcAdapter {
     }
 
     /**
+     * This api is called by applications to start RSSI mode.
+     * Once RSSI is enabled, RSSI data notifications are broadcasted to registered
+     * application when the device is in the reader field. Application can then
+     * analyze this data and find best position for transaction.
+     * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
+     * <li>This api shall be called only after Nfcservice is enabled.
+
+     * </ul>
+     * @param  rssiNtfTimeIntervalInMillisec to set time interval between RSSI
+     * notification in milliseconds. It is recommended that this value is
+     * greater than 10 millisecs and multiple of 10.
+     * @return whether  the update of configuration is
+     *          success or not with reason.
+     *          0x01  - NFC_IS_OFF,
+     *          0x02  - NFC_BUSY_IN_MPOS
+     *          0x03  - ERROR_UNKNOWN
+     *          0x00  - SUCCESS
+     * @throws  IOException if any exception occurs during setting the NFC configuration.
+     */
+    public int startRssiMode(int rssiNtfTimeIntervalInMillisec) {
+      try {
+        return sNxpService.startRssiMode(rssiNtfTimeIntervalInMillisec);
+      } catch (RemoteException e) {
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        return 0x03; /*ERROR_UNKNOWN*/
+      }
+    }
+
+    /**
+     * This api is called by applications to stop RSSI mode
+     * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
+     * <li>This api shall be called only after Nfcservice is enabled.
+
+     * </ul>
+     * @param  None
+     * @return whether  the update of configuration is
+     *          success or not with reason.
+     *          0x01  - NFC_IS_OFF,
+     *          0x02  - NFC_BUSY_IN_MPOS
+     *          0x03  - ERROR_UNKNOWN
+     *          0x00  - SUCCESS
+     * @throws  IOException if any exception occurs during setting the NFC configuration.
+     */
+    public int stopRssiMode() {
+      try {
+        return sNxpService.stopRssiMode();
+      } catch (RemoteException e) {
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        return 0x03; /*ERROR_UNKNOWN*/
+      }
+    }
+
+    /**
+     * This api is called by applications to check whether RSSI is enabled or not
+     * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
+     * <li>This api shall be called only after Nfcservice is enabled.
+
+     * </ul>
+     * @param  None
+     * @return whether  the feature is enabled(true) disabled (false)
+     *          success or not.
+     *          Enabled  - true
+     *          Disabled - false
+     * @throws  IOException if any exception occurs during setting the NFC configuration.
+     */
+    public boolean isRssiEnabled() {
+      try {
+        return sNxpService.isRssiEnabled();
+      } catch (RemoteException e) {
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        return false;
+      }
+    }
+
+    /**
      * This api is called by applications to Activate Secure Element Interface.
      * <p>Requires {@link android.Manifest.permission#NFC} permission.<ul>
      * <li>This api shall be called only Nfcservice is enabled.
