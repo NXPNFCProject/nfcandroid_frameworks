@@ -16,6 +16,17 @@
 
 package com.nxp.sems;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.util.Log;
+import com.nxp.sems.ISemsCallback;
+import com.nxp.sems.SemsAppletIdentifier;
+import com.nxp.sems.SemsGetLastExecStatus;
+import com.nxp.sems.SemsStatus;
+import com.nxp.sems.SemsTLV;
+import com.nxp.sems.SemsUtil;
+import com.nxp.sems.channel.ISemsApduChannel;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
@@ -25,17 +36,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
-
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.util.Log;
-import com.nxp.sems.SemsTLV;
-import com.nxp.sems.SemsUtil;
-import com.nxp.sems.channel.ISemsApduChannel;
-import com.nxp.sems.ISemsCallback;
-import com.nxp.sems.SemsStatus;
-import com.nxp.sems.SemsGetLastExecStatus;
-import android.content.Context;
 
 public class SemsExecutor {
 
@@ -51,6 +51,9 @@ public class SemsExecutor {
 
   public static final byte SEMS_CERTIFICATE_SIGNATURE_5F37_LEN = 64;
   public static final byte SEMS_CERTIFICATE_SIGNATURE_7F49_86_LEN = 67;
+  public static final short MAX_FRAME_SIZE = 255;
+  public static final int TAG73 = 0x73;
+  public static final int TAG5F37 = 0x5F37;
 
   private static ISemsApduChannel sChannel;
   private final byte basicChannel = 0x00;
@@ -402,7 +405,8 @@ public class SemsExecutor {
    */
   private byte[] sendAPCertificate(byte channel, byte[] APCert) {
     try {
-      if (APCert.length < 255) {
+      SemsAppletIdentifier.delayNthCommand();
+      if (APCert.length < MAX_FRAME_SIZE) {
         // One command
         byte[] header = {(byte)0x80, (byte)0xA0, (byte)0x01, (byte)0x00};
         byte[] len = new byte[1];
@@ -411,45 +415,83 @@ public class SemsExecutor {
         byte[] command = SemsUtil.append(SemsUtil.append(header, len), APCert);
 
         Log.d(TAG, "******* Processing LS Certificate 1/1 command");
+
         byte[] rapdu = sChannel.transmit(command);
         putIntoLog(rapdu, SemsCertResponse);
         return rapdu;
-      } else {
-        // Two commands
+      } else { // Two/Three commands based on tag length
         byte[] rapdu;
-        /* static length because of Brainpool curve*/
-        int signAndPubKeyLen = SEMS_CERTIFICATE_SIGNATURE_5F37_LEN +
-                SEMS_CERTIFICATE_SIGNATURE_7F49_86_LEN + 6;
+        byte[] commandHeader = {(byte) 0x80, (byte) 0xA0, (byte) 0x01, (byte) 0x00};
+        byte[] cmdLen = new byte[1];
+        int tag73Offset = 0, tag5F37Offset = 0;
 
-        byte[] firstCommandData =
-            Arrays.copyOfRange(APCert, 0, APCert.length - signAndPubKeyLen);
-        byte[] secondCommandData = Arrays.copyOfRange(
-            APCert, APCert.length - signAndPubKeyLen, APCert.length);
+        int signAndPubKeyLen;
 
-        byte[] firstHeader = {(byte)0x80, (byte)0xA0, (byte)0x01, (byte)0x00};
-        byte[] secondHeader = {(byte)0x80, (byte)0xA0, (byte)0x00, (byte)0x00};
+        /*If TAG73 does not exists*/
+        if (SemsAppletIdentifier.getTag73Len() == 0) {
+          /* static length because of Brainpool curve*/
+          signAndPubKeyLen =
+              (SEMS_CERTIFICATE_SIGNATURE_5F37_LEN + SEMS_CERTIFICATE_SIGNATURE_7F49_86_LEN + 6);
+        } else {
+          tag73Offset = SemsTLV.getTagOffset(APCert, TAG73);
+          tag5F37Offset = SemsTLV.getTagOffset(APCert, TAG5F37);
+          /* Length of remaining frame from TAG73 onwards*/
+          signAndPubKeyLen = (APCert.length - tag73Offset);
+        }
 
-        byte[] firstLen = new byte[1];
-        byte[] secondLen = new byte[1];
+        /*First frame till either start of (TAG73 or TAG5F37)*/
+        byte[] commandData = Arrays.copyOfRange(APCert, 0, APCert.length - signAndPubKeyLen);
+        cmdLen[0] = (byte) commandData.length;
 
-        firstLen[0] = (byte)firstCommandData.length;
-        secondLen[0] = (byte)secondCommandData.length;
+        byte[] firstCommand = SemsUtil.append(SemsUtil.append(commandHeader, cmdLen), commandData);
 
-        byte[] firstCommand = SemsUtil.append(
-            SemsUtil.append(firstHeader, firstLen), firstCommandData);
-        byte[] secondCommand = SemsUtil.append(
-            SemsUtil.append(secondHeader, secondLen), secondCommandData);
-
-        Log.d(TAG, "******* Processing LS Certificate 1/2 command");
+        Log.d(TAG,
+            "******* Processing LS Certificate 1st Frame APCert " + APCert.length
+                + " signAndPubKeyLen " + signAndPubKeyLen + " tag73Offset " + tag73Offset
+                + " tag5F37Offset " + tag5F37Offset);
         rapdu = sChannel.transmit(firstCommand);
-        if (SemsUtil.getSW(rapdu) != (short)0x9000) {
-          putIntoLog(rapdu, SemsCertResponse);
+        putIntoLog(rapdu, SemsCertResponse);
+        if (SemsUtil.getSW(rapdu) != (short) 0x9000) {
           return Arrays.copyOfRange(rapdu, rapdu.length - 2, rapdu.length);
         }
 
-        Log.d(TAG, "******* Processing LS Certificate 2/2 command");
-        rapdu = sChannel.transmit(secondCommand);
-        putIntoLog(rapdu, SemsCertResponse);
+        /*If the second frame is greater than 255*/
+        if (signAndPubKeyLen > MAX_FRAME_SIZE) {
+          /*2nd Frame shall be only TAG73*/
+          commandData = Arrays.copyOfRange(APCert, (tag73Offset), (tag5F37Offset));
+          cmdLen[0] = (byte) (commandData.length);
+          commandHeader[2] = 0x00;
+          byte[] secondCommand =
+              SemsUtil.append(SemsUtil.append(commandHeader, cmdLen), commandData);
+          Log.d(TAG, "******* Processing LS Certificate 2nd/3 Frame cmdLen " + commandData.length);
+          rapdu = sChannel.transmit(secondCommand);
+          putIntoLog(rapdu, SemsCertResponse);
+          if (SemsUtil.getSW(rapdu) != (short) 0x9000) {
+            return Arrays.copyOfRange(rapdu, rapdu.length - 2, rapdu.length);
+          }
+
+          /*3rd Frame shall be remaining from TAG5F37 onwards till end*/
+          commandData = Arrays.copyOfRange(APCert, tag5F37Offset, APCert.length);
+          cmdLen[0] = (byte) (commandData.length);
+
+          byte[] thirdCommand =
+              SemsUtil.append(SemsUtil.append(commandHeader, cmdLen), commandData);
+
+          Log.d(TAG, "******* Processing LS Certificate 3rd/3 Frame");
+          rapdu = sChannel.transmit(thirdCommand);
+          putIntoLog(rapdu, SemsCertResponse);
+        } else {
+          /*2nd Frame shall be remaining (TAG73  or TAG5F37) onwards*/
+          commandData = Arrays.copyOfRange(APCert, APCert.length - signAndPubKeyLen, APCert.length);
+          cmdLen[0] = (byte) commandData.length;
+          commandHeader[2] = 0x00;
+          byte[] secondCommand =
+              SemsUtil.append(SemsUtil.append(commandHeader, cmdLen), commandData);
+
+          Log.d(TAG, "******* Processing LS Certificate 2nd Frame");
+          rapdu = sChannel.transmit(secondCommand);
+          putIntoLog(rapdu, SemsCertResponse);
+        }
 
         return Arrays.copyOfRange(rapdu, rapdu.length - 2, rapdu.length);
       }
@@ -730,7 +772,8 @@ public class SemsExecutor {
     }catch(Exception e) {
       putIntoLog(sw6987, ErrorResponse);
       updateSemsStatus(sw6987);
-      Log.e(TAG, ">>>>>>>>>> Error : Invalid Script <<<<<<<<<<");
+      Log.e(TAG, ">>>>>>>>>> Error : Invalid Script <<<<<<<<<< ");
+      e.printStackTrace();
       return;
     } finally {
       /*Always write log file*/
@@ -771,7 +814,7 @@ public class SemsExecutor {
 
         if (secureCommand.getLength() > 4 /* DDD: was 32 */) {
           byte[] secCmd = secureCommand.getValue();
-
+          SemsAppletIdentifier.delayNthCommand();
           rapdu = sendProcessScript(channelNumber, secCmd);
           if (rapdu == null) {
             Log.e(TAG, "sendProcessScript received incorrect rapdu");
@@ -923,7 +966,11 @@ public class SemsExecutor {
       if (scriptTlvs.get(i).getTag() == 0x7F21) {
         certIndex = i;
         tlvCertInScript = scriptTlvs.get(i);
-
+        try {
+          SemsAppletIdentifier.validateTag73Support(tlvCertInScript);
+        } catch (Exception e) {
+          Log.e(TAG, "Exception in parsing TAG73 in CERT frame");
+        }
         byte[] cert = tlvCertInScript.getTLV();
         tlvs = SemsTLV.parse(tlvCertInScript.getValue());
         tlvSC42 = SemsTLV.find(tlvs, 0x42);
@@ -1113,6 +1160,7 @@ public class SemsExecutor {
       return stat;
     }
     authFrame = SemsTLV.parse(authFrame.getValue()).get(0);
+    SemsAppletIdentifier.delayNthCommand();
     rapdu = sendAuthenticationFrame(channelNumber, authFrame.getValue());
     if (rapdu == null) {
       Log.e(TAG, "sendAuthenticationFrame received incorrect rapdu");

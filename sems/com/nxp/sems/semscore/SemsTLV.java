@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NXP
+ * Copyright 2019, 2021 NXP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -191,5 +191,74 @@ public class SemsTLV {
     } catch (Exception e) {
       return null;
     }
+  }
+
+  public static int getTagOffset(byte[] buff, int tagReq) {
+    int sOffset = 0;
+    int nextOffset = 0;
+    ByteBuffer bb = ByteBuffer.wrap(buff);
+    for (;;) {
+      int tag;
+
+      try {
+        tag = bb.get() & 0xFF;
+        nextOffset++;
+      } catch (BufferUnderflowException e) {
+        Log.e("SemsTLV", "BufferUnderFlowException occured");
+        break;
+      }
+
+      boolean isPrimitive = (tag & 0x20) == 0x00;
+
+      if ((tag & 0x1F) == 0x1F) {
+        /* 2-byte tag*/
+        tag = (tag << 8) + (bb.get() & 0xFF);
+        nextOffset++;
+      }
+      if (tag == tagReq) {
+        return sOffset;
+      }
+
+      int length = bb.get() & 0xFF;
+      if (length <= 0x7F) {
+        /* 1-byte length*/
+        nextOffset++;
+      } else if (length == 0x81) {
+        length = bb.get() & 0xFF;
+        nextOffset += 2;
+      } else if (length == 0x82) {
+        int length1 = bb.get() & 0xFF;
+        int length2 = bb.get() & 0xFF;
+        length = (length1 << 8) + length2;
+        nextOffset += 3;
+      } else if (length == 0x83) {
+        int length1 = bb.get() & 0xFF;
+        int length2 = bb.get() & 0xFF;
+        int length3 = bb.get() & 0xFF;
+        length = (length1 << 16) + (length2 << 8) + length3;
+        nextOffset += 4;
+      } else if (length == 0x84) {
+        int length1 = bb.get() & 0xFF;
+        int length2 = bb.get() & 0xFF;
+        int length3 = bb.get() & 0xFF;
+        int length4 = bb.get() & 0xFF;
+        length = (length1 << 24) + (length2 << 16) + (length3 << 8) + length4;
+        nextOffset += 5;
+      } else {
+        throw new RuntimeException("Bad length field");
+      }
+
+      if (isPrimitive) {
+        byte[] value = new byte[length];
+        nextOffset += length;
+        bb.get(value, 0, value.length);
+      } else {
+        /* In case of constructed TLV only tag, length counted, value skipped
+        for offset calculation*/
+      }
+      // Update offset pointing to next tag
+      sOffset = nextOffset;
+    }
+    return -1;
   }
 }
