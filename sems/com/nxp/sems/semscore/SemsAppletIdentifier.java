@@ -68,14 +68,25 @@ public class SemsAppletIdentifier {
     // Parse outer T-L-V TAG73 for inner tags 5C, 5D and 5E
     tlvs = SemsTLV.parse(tlv73.getValue());
     tlv5C = SemsTLV.find(tlvs, 0x5C);
-
+    if (tlv5C == null) {
+      Log.d(TAG, "tlv5C is null");
+      return;
+    }
     if (!Arrays.equals(tlv5C.getValue(), SEMS_SB_APP_ID)) {
       Log.d(TAG, "Is not SB Applet");
       return;
     }
     tlv5D = SemsTLV.find(tlvs, 0x5D);
+    if (tlv5D == null) {
+      Log.d(TAG, "tlv5D is null");
+      return;
+    }
     commandNumber = arrayToValue(tlv5D.getValue());
     tlv5E = SemsTLV.find(tlvs, 0x5E);
+    if (tlv5E == null) {
+      Log.d(TAG, "tlv5E is null");
+      return;
+    }
     delayInMillsec = arrayToValue(tlv5E.getValue());
     if (delayInMillsec != 0x00) {
       Log.d(TAG,
