@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 NXP
+ * Copyright 2019-2022 NXP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,14 +65,16 @@ public final class SemsAgent {
     if (context == null) {
       throw new SemsException("Context information invalid/null");
     }
-    if (sInstance == null) {
-      synchronized (SemsAgent.class) { sInstance = new SemsAgent(); }
+    synchronized (SemsAgent.class) {
+      if (sInstance == null) {
+        sInstance = new SemsAgent();
+      }
+      if (context != sContext) {
+        sContext = context;
+      }
+      Log.d(TAG, "Sems Agent version " + major + "." + minor);
+      return sInstance;
     }
-    if (context != sContext) {
-      sContext = context;
-    }
-    Log.d(TAG, "Sems Agent version " + major + "." + minor);
-    return sInstance;
   }
 
   private SemsAgent() {}

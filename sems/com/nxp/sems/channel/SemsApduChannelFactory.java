@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NXP
+ * Copyright 2019,2022 NXP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,16 +29,14 @@ public class SemsApduChannelFactory {
 
   public static ISemsApduChannel getInstance(byte type, Context context,
           byte terminalID) throws SemsException{
-    if(mChannelFactory == null) {
       synchronized (SemsApduChannelFactory.class) {
         if(mChannelFactory == null) {
           Log.d(TAG, "SemsApduChannelFactory Initialization");
           mChannelFactory = (ISemsApduChannel) SemsApduChannelFactory.
                                  createApduChannel(type, context, terminalID);
         }
+        return mChannelFactory;
       }
-    }
-    return mChannelFactory;
   }
 
   private SemsApduChannelFactory() {}
