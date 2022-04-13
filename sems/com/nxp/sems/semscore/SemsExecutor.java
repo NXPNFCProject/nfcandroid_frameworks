@@ -1009,7 +1009,7 @@ public class SemsExecutor {
     if (rapdu == null) {
       Log.e(TAG, "sendAuthenticationFrame received incorrect rapdu");
       mSemsFileOp.putIntoLog(sw6987, ErrorResponse);
-      updateSemsStatus(sw6987);
+      response = sw6987;
       return stat;
     }
     mSemsFileOp.putIntoLog(rapdu, SemsAuthResponse);
