@@ -2,7 +2,7 @@
  *
  *  The original Work has been changed by NXP.
  *
- *  Copyright 2013-2021 NXP
+ *  Copyright 2013-2022 NXP
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -885,6 +885,27 @@ public final class NxpNfcAdapter {
     public int stopExtendedFieldDetectMode() {
       try {
         return sNxpService.stopExtendedFieldDetectMode();
+      } catch (RemoteException e) {
+        e.printStackTrace();
+        attemptDeadServiceRecovery(e);
+        return 0x06; /*EFDSTATUS_ERROR_UNKNOWN*/
+      }
+    }
+
+    /**
+     * This API starts card emulation mode. Starts RF Discovery with Default
+     * POLL & Listen configurations
+     * @return status     :-0x00 :EFDSTATUS_SUCCESS
+     *                      0x01 :EFDSTATUS_FAILED
+     *                      0x05 :EFDSTATUS_ERROR_NFC_IS_OFF
+     *                      0x06 :EFDSTATUS_ERROR_UNKNOWN
+     *                      0x07 :EFDSTATUS_ERROR_NOT_STARTED
+     * <p>Requires {@link   android.Manifest.permission#NFC} permission.
+     */
+    @SystemApi
+    public int startCardEmulation() {
+      try {
+        return sNxpService.startCardEmulation();
       } catch (RemoteException e) {
         e.printStackTrace();
         attemptDeadServiceRecovery(e);
