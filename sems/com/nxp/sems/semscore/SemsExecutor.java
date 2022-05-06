@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 NXP
+ * Copyright 2019-2022 NXP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1166,7 +1166,7 @@ public class SemsExecutor {
       Log.e(TAG, "sendAuthenticationFrame received incorrect rapdu");
       closeLogicalChannel(channelNumber);
       putIntoLog(sw6987, ErrorResponse);
-      updateSemsStatus(sw6987);
+      response = sw6987;
       return stat;
     }
     putIntoLog(rapdu, SemsAuthResponse);
