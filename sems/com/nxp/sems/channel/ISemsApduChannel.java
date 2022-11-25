@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NXP
+ * Copyright 2019-2022 NXP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,4 +22,5 @@ public interface ISemsApduChannel {
   byte[] open(byte[] aid) throws IOException;
   byte[] transmit(byte[] buffer) throws IOException;
   void close();
+  boolean isAuthRequired();
 }

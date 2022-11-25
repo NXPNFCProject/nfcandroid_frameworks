@@ -17,6 +17,8 @@
 package com.nxp.sems;
 
 import android.content.Context;
+import android.content.pm.FeatureInfo;
+import android.content.pm.PackageManager;
 import android.util.Log;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -53,6 +55,7 @@ public final class SemsAgent {
   private SemsExecutor mExecutor = null;
   public static Object semsObj = new Object();
   public static boolean flagSemsObj = false;
+  private static final int KEYSTORE_VERSION_2_0 = 200;
   /**
    * Returns SemsAgent singleton object
    * <br/>
@@ -248,5 +251,45 @@ public final class SemsAgent {
     } catch (Exception e) {
       throw new SemsException("Unable to set Hash type");
     }
+  }
+
+     /**
+     * Returns 0 if not implemented. Otherwise returns the feature version.
+     * <br/>
+     * @param Context appContext : application context
+     *
+     * @return int : returns 0 if feature not found, else returns feature version.
+     */
+    private static int getKeystoreFeatureVersion(Context appContext) {
+        PackageManager pm = appContext.getPackageManager();
+        int featureVersionFromPm = 0;
+        if (pm.hasSystemFeature(PackageManager.FEATURE_STRONGBOX_KEYSTORE)) {
+            FeatureInfo info = null;
+            FeatureInfo[] infos = pm.getSystemAvailableFeatures();
+            for (int n = 0; n < infos.length; n++) {
+                FeatureInfo i = infos[n];
+                if (i.name.equals(PackageManager.FEATURE_STRONGBOX_KEYSTORE)) {
+                    info = i;
+                    break;
+                }
+            }
+            if (info != null) {
+                featureVersionFromPm = info.version;
+            }
+        }
+        return featureVersionFromPm;
+    }
+
+  public boolean isAuthRequired() {
+    int keyMintFeatureVersion = getKeystoreFeatureVersion(sContext);
+    if (keyMintFeatureVersion < KEYSTORE_VERSION_2_0) {
+      Log.e(TAG, "KeyMintFeature(" +  keyMintFeatureVersion +
+                  ") version is less than 200. Exiting...");
+      return false;
+    }
+    if (mSemsApduChannel != null) {
+      return mSemsApduChannel.isAuthRequired();
+    }
+    return true;
   }
 }
