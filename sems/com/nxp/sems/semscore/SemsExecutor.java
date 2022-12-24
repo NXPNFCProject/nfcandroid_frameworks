@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 NXP
+ * Copyright 2019-2023 NXP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,6 +54,7 @@ public class SemsExecutor {
   private String shatype;
   private byte[] AID_MEM;
   private ISemsCallback mSemsCallback;
+  private ISemsAuthCallback mSemsAuthCallback;
   private static Context sContext;
   private SemsFileOperation mSemsFileOp;
   private String inputScript;
@@ -478,11 +479,12 @@ public class SemsExecutor {
    * @return {@code true} if the SW returned is 9000, {@code false} otherwise.
    */
   public SemsStatus executeScript(String scriptIn, String scriptOut,
-                                    ISemsCallback callback) {
+                                    ISemsCallback callback, ISemsAuthCallback semsAuthCallback) {
     SemsStatus status = SemsStatus.SEMS_STATUS_FAILED;
     inputScript = scriptIn;
     outputScript = scriptOut;
     this.mSemsCallback = callback;
+    this.mSemsAuthCallback = semsAuthCallback;
     status = mSemsFileOp.setDirectories(SemsExecutor.sContext);
     if (status == SemsStatus.SEMS_STATUS_SUCCESS) {
       mSemsFileOp.writeScriptInputFile("encrypted_script.txt", scriptIn);
@@ -546,6 +548,13 @@ public class SemsExecutor {
             if (status != SemsStatus.SEMS_STATUS_SUCCESS) {
               response = sw6987;
               return;
+            }
+            if (mSemsAuthCallback != null) {
+              if (!mSemsAuthCallback.doAuthforSems()) {
+                Log.e(TAG, "User Authentication for SEMS failed. Exiting...");
+                response = sw6987;
+                return;
+              }
             }
           }
           // fall-through
