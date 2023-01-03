@@ -3,7 +3,7 @@
 //#######################################
 prebuilt_etc {
     name: "com.nxp.sems.xml",
-    vendor: true,
+    product_specific: true,
     sub_dir: "permissions",
     src:"com.nxp.sems.xml",
 }
@@ -13,7 +13,7 @@ java_library {
     name: "com.nxp.sems",
     installable: true,
     sdk_version: "29",
-    vendor: true,
+    product_specific: true,
     required: ["com.nxp.sems.xml"],
 
     srcs: [

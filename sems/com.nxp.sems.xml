@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- Copyright 2019 NXP
+ Copyright 2019, 2023 NXP
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -18,5 +18,5 @@
 <!-- Assist library for NXP SEMS extensions. -->
 <permissions>
     <library name="com.nxp.sems"
-        file="/vendor/framework/com.nxp.sems.jar" />
+        file="/product/framework/com.nxp.sems.jar" />
 </permissions>
