@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 NXP
+ * Copyright 2019-2021 NXP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,9 +47,7 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
   private Reader mReader = null;
   private static SemsOmapiApduChannel sOmapiChannel = null;
   private BindToSEService bindService = null;
-  private static boolean sAuthenticationRequired = true;
-  private static final byte IAR_SUPPORTED_VERSION_ID = 0x21;
-  private static final byte ATR_VERSION_ID_INDEX = 4;
+
   /**
    * Returns SemsOmapiApduChannel singleton object
    * <br/>
@@ -264,19 +262,5 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
       if(seService != null)
         Log.d(TAG, "Bind to SE service Success");
     }
-  }
-
-  public boolean isAuthRequired() {
-    sAuthenticationRequired = true;
-
-    if (sSession != null && (!sSession.isClosed())) {
-      byte [] atr = sSession.getATR();
-      if ((atr != null) && (atr.length > ATR_VERSION_ID_INDEX) &&
-        (atr[ATR_VERSION_ID_INDEX] < IAR_SUPPORTED_VERSION_ID)) {
-              sAuthenticationRequired = false;
-      }
-    }
-    Log.d(TAG, "isAuthRequired(): sAuthenticationRequired = " + sAuthenticationRequired);
-    return sAuthenticationRequired;
   }
 }
