@@ -168,6 +168,43 @@ public final class SemsAgent {
    * <br/>
    * inputScript : The Input secure script buffer in string format,
    * fileName : Output response storage file name
+   * semsAuthCallback : Callback to be invoked for IAR User Auth
+   * @param void
+   *
+   * @return {@code status} 0 in SUCCESS, otherwise
+   *                        1 in SEMS status Failed
+   *                        2 in SEMS status Busy
+   *                        3 in SEMS status denied
+   *                     0x0f in Unknown error.
+   */
+  public int SemsExecuteScript(String inputScriptBuffer, String outputFilename,
+      ISemsAuthCallback semsAuthCallback) throws SemsException {
+    SemsExecutionStatus.mSemsExecutionStatus = SEMS_STATUS_FAILED;
+    int status = SemsExecuteScript(inputScriptBuffer, outputFilename,
+                    new SemsExecutionStatus() ,DEFAULT_TERMINAL_ID, semsAuthCallback);
+    if (status == SEMS_STATUS_SUCCESS) {
+      synchronized (semsObj) {
+        while (!flagSemsObj) {
+          try {
+            semsObj.wait();
+          } catch (InterruptedException e) {
+            Log.e(TAG, "Wait on SEMS script Execution failed");
+          }
+        }
+        flagSemsObj = false;
+      }
+
+      return SemsExecutionStatus.mSemsExecutionStatus;
+    } else {
+      return SEMS_STATUS_FAILED;
+    }
+  }
+
+  /**
+   * Perform secure SEMS script execution synchronously
+   * <br/>
+   * inputScript : The Input secure script buffer in string format,
+   * fileName : Output response storage file name
    * @param void
    *
    * @return {@code status} 0 in SUCCESS, otherwise
