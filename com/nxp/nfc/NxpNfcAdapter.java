@@ -2,7 +2,7 @@
  *
  *  The original Work has been changed by NXP.
  *
- *  Copyright 2013-2022 NXP
+ *  Copyright 2013-2022, 2023 NXP
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -463,6 +463,12 @@ public final class NxpNfcAdapter {
               arr[i] = NfcConstants.UICC_ID;
             } else if (activeSEList[i] == NfcConstants.UICC2_ID_TYPE) {
               arr[i] = NfcConstants.UICC2_ID;
+            } else if (activeSEList[i] == NfcConstants.EUICC1_ID_TYPE) {
+              arr[i] = NfcConstants.EUICC1_ID;
+            } else if (activeSEList[i] == NfcConstants.EUICC2_ID_TYPE) {
+              arr[i] = NfcConstants.EUICC2_ID;
+            } else if (activeSEList[i] == NfcConstants.T4T_ID_TYPE) {
+              arr[i] = NfcConstants.T4T_ID;
             } else {
               throw new IOException("No Secure Element Activeted");
             }
