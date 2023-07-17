@@ -96,12 +96,16 @@ public final class SemsAgent {
   }
 
   /**
-   * Perform secure SEMS script execution
+   * Perform secure SEMS script execution.
+   * Keymint, Weaver Applet update shall use this api if IAR enabled
+   * in system. User pin entry shall be performed as part of
+   * semsAuthCallback, implemented by SEMS updater android application.
    * <br/>
    * inputScript : The Input secure script buffer in string format
    * fileName : Output response storage file name
    * callback : Callback to be invoked once SEMS execution is done
-   * semsAuthCallback : Callback to be invoked for IAR User Auth
+   * semsAuthCallback : Callback to be invoked for IAR User Auth.
+   *                    This is needed for KM, Weaver Applet update.
    * @param void
    *
    * @return {@code status} 0 in SUCCESS, otherwise 1 in failure
