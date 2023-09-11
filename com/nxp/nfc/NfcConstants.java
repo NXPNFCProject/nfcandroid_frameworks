@@ -105,6 +105,12 @@ public final class NfcConstants {
   public static final int HOST_ID_TYPE = 0;
 
   /**
+   * eSE handle
+   *@hide
+   */
+  public static final int EE_HANDLE_0xF3 = 0x4C0;
+
+  /**
    * fw version major number
    * @hide
    */
