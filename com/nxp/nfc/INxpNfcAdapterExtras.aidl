@@ -1,6 +1,6 @@
 /*
  *
- *  Copyright (C) 2014 NXP Semiconductors
+ *  Copyright 2014,2023 NXP
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import android.content.Intent;
  * {@hide}
  */
 interface INxpNfcAdapterExtras {
-    boolean reset(in String pkg);
     Bundle getAtr(in String pkg);
     boolean accessControlForCOSU (int mode);
 }
