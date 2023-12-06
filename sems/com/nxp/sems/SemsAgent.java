@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2023 NXP
+ * Copyright 2019-2024 NXP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public final class SemsAgent {
   public String SEMS_HASH_TYPE_SHA1   = "SHA1";
   public String SEMS_HASH_TYPE_SHA256 = "SHA256";
   public static final short major = 1;
-  public static final short minor = 6;
+  public static final short minor = 7;
 
   private static final byte DEFAULT_TERMINAL_ID = 1;
   private static SemsAgent sInstance;

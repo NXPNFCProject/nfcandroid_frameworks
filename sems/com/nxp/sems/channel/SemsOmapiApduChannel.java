@@ -47,6 +47,7 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
   private Reader mReader = null;
   private static SemsOmapiApduChannel sOmapiChannel = null;
   private BindToSEService bindService = null;
+  private static byte mTerminalID = 0;
 
   /**
    * Returns SemsOmapiApduChannel singleton object
@@ -62,7 +63,7 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
     sContext = context;
     boolean initRequired = false;
     if (sOmapiChannel == null || seService == null || sSession == null
-     || sChannel == null) {
+     || sChannel == null || mTerminalID != terminalID) {
       initRequired = true;
     } else if (!seService.isConnected() || sSession.isClosed() ||
                !sChannel.isOpen()) {
@@ -70,11 +71,9 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
     }
 
     if (initRequired) {
-      if(seService != null) {
-        seService.shutdown();
-        seService = null;
-      }
+      if(sSession != null) { sSession.close();}
       sSession = null;
+      mTerminalID = terminalID;
       sOmapiChannel = new SemsOmapiApduChannel();
     } else {
       Log.d(TAG, "Already Initialized");
