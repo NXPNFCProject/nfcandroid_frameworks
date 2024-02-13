@@ -2,7 +2,7 @@
  *
  *  The original Work has been changed by NXP.
  *
- *  Copyright 2013-2022, 2023 NXP
+ *  Copyright 2013-2022, 2023-2024 NXP
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public final class NxpNfcAdapter {
      * Bundle)}. <p> Setting this flag enables polling for Nfc-Q(Quiet tag)
      * technology.
      */
-    public static final int FLAG_READER_NFC_Q = 0x20;
+    public static final int FLAG_READER_NFC_Q = 0x100;
 
     /**
      * The NfcAdapter object for each application context.
