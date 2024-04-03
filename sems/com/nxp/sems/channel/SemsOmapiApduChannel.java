@@ -72,6 +72,10 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
 
     if (initRequired) {
       if(sSession != null) { sSession.close();}
+      if(seService != null) {
+        seService.shutdown();
+        seService = null;
+      }
       sSession = null;
       mTerminalID = terminalID;
       sOmapiChannel = new SemsOmapiApduChannel();
