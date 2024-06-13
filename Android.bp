@@ -18,11 +18,13 @@ java_library {
         "com/**/*.java",
         "android/**/*.java",
         // TODO(b/263565193): Temp hack until NFC APK can link against module_current.
-        ":framework-nfc-updatable-sources",
+        //":framework-nfc-updatable-sources",
     ],
+
+    static_libs: ["framework-nfc.impl",],
+
     libs: [
-        "framework-nfc.impl",
-        "unsupportedappusage"
+        "unsupportedappusage",
     ]
 
 }
