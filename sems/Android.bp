@@ -1,0 +1,24 @@
+//#######################################
+// com.nxp.ls - library
+//#######################################
+prebuilt_etc {
+    name: "com.nxp.sems.xml",
+    product_specific: true,
+    sub_dir: "permissions",
+    src:"com.nxp.sems.xml",
+}
+
+java_library {
+
+    name: "com.nxp.sems",
+    installable: true,
+    sdk_version: "29",
+    product_specific: true,
+    required: ["com.nxp.sems.xml"],
+
+    srcs: [
+        "com/**/I*.aidl",
+        "com/**/*.java",
+    ],
+
+}
