@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NXP
+ * Copyright 2024 NXP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
-package com.nxp.sems;
+package com.nxp.nfc;
 
-public class SemsGetLastExecStatus {
-  public String outScriptSignature;
-  public int status;
+/**
+ * @class INxpNfcAdapter
+ * @brief Interface to perform the NFC Extension functionality.
+ *
+ * @hide
+ */
+public interface INxpNfcAdapter {
+
 }

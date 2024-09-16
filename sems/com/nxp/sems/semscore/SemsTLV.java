@@ -16,12 +16,12 @@
 
 package com.nxp.sems;
 
+import android.util.Log;
 import java.io.ByteArrayOutputStream;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import android.util.Log;
 
 public class SemsTLV {
   private int tag;

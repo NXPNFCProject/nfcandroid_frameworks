@@ -17,17 +17,17 @@
 package com.nxp.sems.channel;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.se.omapi.*;
-import java.util.concurrent.Executor;
-import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeoutException;
 import android.se.omapi.SEService.OnConnectedListener;
 import android.util.Log;
 import com.nxp.sems.SemsException;
-import android.os.Bundle;
+import java.io.IOException;
 import java.util.NoSuchElementException;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Executor;
+import java.util.concurrent.TimeoutException;
 
 public class SemsOmapiApduChannel implements ISemsApduChannel {
   public static final String TAG = "SEMS-SemsApduChannel";
@@ -57,13 +57,14 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
    *
    * @return {@code SemsAgent}.
    */
-  public static SemsOmapiApduChannel getInstance(byte terminalID, Context context)
+  public static SemsOmapiApduChannel getInstance(byte terminalID,
+                                                 Context context)
       throws SemsException {
     ESE_TERMINAL_NAME = "eSE" + String.valueOf(terminalID);
     sContext = context;
     boolean initRequired = false;
-    if (sOmapiChannel == null || seService == null || sSession == null
-     || sChannel == null || mTerminalID != terminalID) {
+    if (sOmapiChannel == null || seService == null || sSession == null ||
+        sChannel == null || mTerminalID != terminalID) {
       initRequired = true;
     } else if (!seService.isConnected() || sSession.isClosed() ||
                !sChannel.isOpen()) {
@@ -71,8 +72,10 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
     }
 
     if (initRequired) {
-      if(sSession != null) { sSession.close();}
-      if(seService != null) {
+      if (sSession != null) {
+        sSession.close();
+      }
+      if (seService != null) {
         seService.shutdown();
         seService = null;
       }
@@ -129,7 +132,7 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
            (bindService != null && bindService.isAlive())) {
       try {
         Log.d(TAG, "Retry on SeService connection failure");
-        new Thread().sleep(SERVICE_CONNECTION_TIME_OUT/6);
+        new Thread().sleep(SERVICE_CONNECTION_TIME_OUT / 6);
       } catch (Exception e) {
         Log.d(TAG, "getSession Thread interruption exception received");
       }
@@ -257,16 +260,17 @@ public class SemsOmapiApduChannel implements ISemsApduChannel {
 
       do {
         seService = new SEService(sContext, mExecutor, mListener);
-        if(seService == null) {
+        if (seService == null) {
           try {
-            new Thread().sleep(SERVICE_CONNECTION_TIME_OUT/6);
+            new Thread().sleep(SERVICE_CONNECTION_TIME_OUT / 6);
             Log.d(TAG, "Bind to SE service fails" + max_retry);
           } catch (Exception e) {
-            Log.d(TAG, "BindToSEService Thread interruption exception received");
+            Log.d(TAG,
+                  "BindToSEService Thread interruption exception received");
           }
         }
       } while (seService == null && (max_retry++ < 3));
-      if(seService != null)
+      if (seService != null)
         Log.d(TAG, "Bind to SE service Success");
     }
   }

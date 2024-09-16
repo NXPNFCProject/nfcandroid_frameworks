@@ -16,10 +16,10 @@
 
 package com.nxp.sems.channel;
 
-import com.nxp.sems.channel.SemsOmapiApduChannel;
 import android.content.Context;
-import com.nxp.sems.SemsException;
 import android.util.Log;
+import com.nxp.sems.SemsException;
+import com.nxp.sems.channel.SemsOmapiApduChannel;
 
 public class SemsApduChannelFactory {
   public static final byte OMAPI_CHANNEL = 0;
@@ -28,24 +28,26 @@ public class SemsApduChannelFactory {
   public static final String TAG = "SEMS-SemsApduChannelFactory";
 
   public static ISemsApduChannel getInstance(byte type, Context context,
-          byte terminalID) throws SemsException{
-      synchronized (SemsApduChannelFactory.class) {
-       /* The singleton obj creation for OMAPI APDU channel is controlled by
-          lower layer i.e. SemsOmapiApduChannel */
-        if((mChannelFactory == null && type == RAW_CHANNEL) ||
-           (type == OMAPI_CHANNEL)) {
-          Log.d(TAG, "SemsApduChannelFactory Initialization");
-          mChannelFactory = (ISemsApduChannel) SemsApduChannelFactory.
-                                 createApduChannel(type, context, terminalID);
-        }
-        return mChannelFactory;
+                                             byte terminalID)
+      throws SemsException {
+    synchronized (SemsApduChannelFactory.class) {
+      /* The singleton obj creation for OMAPI APDU channel is controlled by
+         lower layer i.e. SemsOmapiApduChannel */
+      if ((mChannelFactory == null && type == RAW_CHANNEL) ||
+          (type == OMAPI_CHANNEL)) {
+        Log.d(TAG, "SemsApduChannelFactory Initialization");
+        mChannelFactory =
+            (ISemsApduChannel)SemsApduChannelFactory.createApduChannel(
+                type, context, terminalID);
       }
+      return mChannelFactory;
+    }
   }
 
   private SemsApduChannelFactory() {}
 
   private static ISemsApduChannel createApduChannel(byte type, Context context,
-                                           byte terminalID)
+                                                    byte terminalID)
       throws SemsException {
     ISemsApduChannel mSemsApduChannel = null;
     if (type == OMAPI_CHANNEL) {

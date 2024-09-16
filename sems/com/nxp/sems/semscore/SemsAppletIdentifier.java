@@ -36,7 +36,8 @@ public class SemsAppletIdentifier {
   private static int delayInMillsec;
 
   /*Strong Box Applet Identifier ASCII value*/
-  private static final byte[] SEMS_SB_APP_ID = SemsUtil.parseHexString("5374726F6E67426F78");
+  private static final byte[] SEMS_SB_APP_ID =
+      SemsUtil.parseHexString("5374726F6E67426F78");
 
   /**
    * Validate TAG and subtag support.
@@ -47,7 +48,8 @@ public class SemsAppletIdentifier {
    *
    * @return void.
    */
-  protected static void validateTag73Support(SemsTLV tlvCertInScript) throws Exception {
+  protected static void validateTag73Support(SemsTLV tlvCertInScript)
+      throws Exception {
     Log.d(TAG, "***Initalize the variable to default values..**");
     lineCounter = 0;
     isTAG73Supported = false;
@@ -89,9 +91,8 @@ public class SemsAppletIdentifier {
     }
     delayInMillsec = arrayToValue(tlv5E.getValue());
     if (delayInMillsec != 0x00) {
-      Log.d(TAG,
-          "***TAG 73 and sub-tag 5C,5D " + commandNumber + " 5E " + delayInMillsec
-              + " are supported.**");
+      Log.d(TAG, "***TAG 73 and sub-tag 5C,5D " + commandNumber + " 5E " +
+                     delayInMillsec + " are supported.**");
       isTAG73Supported = true;
       return;
     } else {
@@ -149,9 +150,11 @@ public class SemsAppletIdentifier {
     else if (len == 2)
       temp = (arr[0] << 8) & 0xFF00 | (arr[1] & 0xFF);
     else if (len == 3)
-      temp = (arr[0] << 16) & 0xFF0000 | (arr[1] << 8) & 0xFF00 | (arr[2] & 0xFF);
+      temp =
+          (arr[0] << 16) & 0xFF0000 | (arr[1] << 8) & 0xFF00 | (arr[2] & 0xFF);
     else if (len == 4)
-      temp = (arr[0] << 24) | (arr[1] << 16) & 0xFF0000 | (arr[2] << 8) & 0xFF00 | (arr[3] & 0xFF);
+      temp = (arr[0] << 24) | (arr[1] << 16) & 0xFF0000 |
+             (arr[2] << 8) & 0xFF00 | (arr[3] & 0xFF);
 
     return temp;
   }

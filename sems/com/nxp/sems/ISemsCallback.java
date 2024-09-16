@@ -22,7 +22,5 @@ public interface ISemsCallback {
    */
   public void onSemsComplete(int status);
 
-  default void onSemsComplete(int status, String resp) {
-    return;
-  }
+  default void onSemsComplete(int status, String resp) { return; }
 }

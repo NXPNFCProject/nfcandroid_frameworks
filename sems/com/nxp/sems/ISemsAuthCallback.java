@@ -17,12 +17,12 @@
 package com.nxp.sems;
 
 public interface ISemsAuthCallback {
-    /**
-     * Invoked before SEMS update, for user authentication(IAR).
-     * <br/>
-     *
-     * @return boolean TRUE if User Authetication success.
-     *         else returns FALSE.
-     */
-    boolean doAuthforSems();
+  /**
+   * Invoked before SEMS update, for user authentication(IAR).
+   * <br/>
+   *
+   * @return boolean TRUE if User Authetication success.
+   *         else returns FALSE.
+   */
+  boolean doAuthforSems();
 }
