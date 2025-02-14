@@ -324,10 +324,8 @@ public class NfcOperations {
         }
 
         @Override
-        public void onSeListenActivated(boolean isActivated) {
-            NxpNfcLogger.d(TAG, "onSeListenActivated: " + isActivated);
-        }
-
+        public void onExtractOemPackages(
+            NdefMessage message, Consumer<List<String>> packageConsumer) {}
     };
 
     ControllerAlwaysOnListener mControllerAlwaysOnListener = new ControllerAlwaysOnListener() {
@@ -338,10 +336,6 @@ public class NfcOperations {
             if (mControllerAlwaysOnLatch != null) mControllerAlwaysOnLatch.countDown();
 
         }
-
-        @Override
-        public void onExtractOemPackages(
-            NdefMessage message, Consumer<List<String>> packageConsumer) {}
     };
 
     /**
