@@ -243,8 +243,7 @@ public class NfcOperations {
         }
 
         @Override
-        public void onRoutingChanged(){
-        }
+        public void onRoutingChanged(Consumer<Boolean> isSkipped) {}
 
         @Override
         public void onHceEventReceived(int action){
@@ -275,7 +274,7 @@ public class NfcOperations {
         }
 
         @Override
-        public void onEeListenActivated(boolean isActivated){
+        public void onEeListenActivated(boolean isActivated) {
         }
 
         @Override
@@ -322,6 +321,10 @@ public class NfcOperations {
             if (mControllerAlwaysOnLatch != null) mControllerAlwaysOnLatch.countDown();
 
         }
+
+        @Override
+        public void onExtractOemPackages(
+            NdefMessage message, Consumer<List<String>> packageConsumer) {}
     };
 
     /**
