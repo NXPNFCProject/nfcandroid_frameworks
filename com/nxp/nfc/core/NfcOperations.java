@@ -248,6 +248,11 @@ public class NfcOperations {
         public void onHceEventReceived(int action){
         }
 
+        @Override
+        public void onSeListenActivated(boolean isActivated) {
+            NxpNfcLogger.d(TAG, "onSeListenActivated: " + isActivated);
+        }
+
     };
 
     ControllerAlwaysOnListener mControllerAlwaysOnListener = new ControllerAlwaysOnListener() {
