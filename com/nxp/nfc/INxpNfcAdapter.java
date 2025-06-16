@@ -44,6 +44,7 @@ public interface INxpNfcAdapter {
   INxpNfcExtentions getNxpNfcExtentionsInterface();
   /**
    * This is the first API to be called to start or stop the mPOS mode
+   * <ul>
    * <li>This api shall be called only Nfcservice is enabled.
    * <li>This api shall be called only when there are no NFC transactions
    * ongoing
@@ -59,6 +60,7 @@ public interface INxpNfcAdapter {
 
   /**
    * This is provides the info whether mPOS mode is activated or not
+   * <ul>
    * <li>This api shall be called only Nfcservice is enabled.
    * <li>This api shall be called only when there are no NFC transactions
    * ongoing
@@ -140,6 +142,7 @@ public interface INxpNfcAdapter {
 
   /**
    * This is the API to be called to enable or disable QTag RF mode.
+   * <ul>
    * <li>This api shall be called only when Nfcservice is enabled.
    * <li>This api shall be called only when there are no NFC transactions
    * ongoing.
@@ -166,9 +169,10 @@ public interface INxpNfcAdapter {
   /**
      * This api is called by applications to update the NFC configurations which
      * are already part of libnfc-nci.conf <p>Requires
-     * {@link android.Manifest.permission#NFC} permission.<ul> <li>This api
-     * shall be called only Nfcservice is enabled. <li>This api shall be called
-     * only when there are no NFC transactions ongoing
+     * {@link android.Manifest.permission#NFC} permission.
+     * <ul>
+     * <li>This api shall be called only Nfcservice is enabled.
+     * <li>This api shall be called only when there are no NFC transactions ongoing
      * </ul>
      * @param  configs NFC Configuration to be updated.
      * @apiNote String should have KEY and assigned with Value in Hexadecimal.
