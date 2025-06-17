@@ -123,6 +123,7 @@ public interface INxpNfcAdapter {
 
   /**
    * This API sends Autocard AID's  to NFCC using the vendor NCI message
+   * <ul>
    * <li>This api shall be called only Nfcservice is enabled.
    * </ul>
    * @param aids  No of AID's to configure.
