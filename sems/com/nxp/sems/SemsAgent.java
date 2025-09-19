@@ -104,7 +104,7 @@ public final class SemsAgent {
     validation |= (NXP_EN_PN557 << 11);
 
     String version = String.format(
-        "SEMS Version: NXP_AR_%02X_%05X_%02d.%02X.%02X_TC1",
+        "SEMS Version: NXP_AR_%02X_%05X_%02d.%02X.%02X_TC2",
         NFC_NXP_MW_CUSTOMER_ID, validation, NFC_NXP_MW_ANDROID_VER,
         NFC_NXP_MW_VERSION_MAJ, NFC_NXP_MW_VERSION_MIN);
     Log.d(TAG, version);
